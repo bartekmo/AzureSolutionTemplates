@@ -6,98 +6,49 @@
       "type": "string"
     },
     "fwVmAddress": {
-      "type": "string",
-      "metadata": {
-        "description": "Private IP address of firewall instance"
-      }
+      "type": "string"
     },
     "fwVmSize": {
-      "type": "string",
-      "allowedValues": [ "Standard_A1", "Standard_D2" ],
-      "metadata": {
-        "description": "Firewall instance size"
-      }
+      "type": "string"
+    },
+    "fwVmSizePremium": {
+      "type": "string"
     },
     "fwVmRootPasswd": {
-      "type": "securestring",
-      "metadata": {
-        "description": "Provide password for main administrative account. Username is always set to 'root'."
-      }
+      "type": "securestring"
     },
     "fwSubnetName": {
-      "type": "string",
-      "defaultValue": "firewallSubnet",
-      "metadata": {
-        "description": "Subnet name to deploy firewall"
-      }
+      "type": "string"
     },
     "fwSubnetAddress": {
-      "type": "string",
-      "metadata": {
-        "description": "Firewall Subnet address"
-      }
+      "type": "string"
     },
     "publicIpName": {
-      "type": "string",
-      "metadata": {
-        "description": "ARM resource name for public IP"
-      }
+      "type": "string"
     },
     "publicIpDnsName": {
-      "type": "string",
-      "metadata": {
-        "description": "Domain prefix for public IP DNS name"
-      }
+      "type": "string"
     },
     "publicIpAddressType": {
-      "type": "string",
-      "allowedValues": [
-        "Static",
-        "Dynamic"
-      ],
-      "metadata": {
-        "description": "Type of firewall public IP"
-      }
+      "type": "string"
     },
     "newStorageAccountName": {
-      "type": "string",
-      "metadata": {
-        "description": "New storage account name"
-      }
+      "type": "string"
     },
     "newStorageAccountType": {
-      "type": "string",
-      "allowedValues": [
-        "Standard_LRS",
-        "Premium_LRS"
-      ],
-      "metadata": {
-        "description": "Type of new storage account"
-      }
-    },
-    "fwVmAddress": {
-      "type": "string",
-      "metadata": {
-        "description": "Private IP address of firewall instance"
-      }
+      "type": "string"
     },
     "vnetName": {
-      "type": "string",
-      "metadata": {
-        "description": "Vnet name"
-      }
+      "type": "string"
     },
     "vnetAddressSpace": {
-      "type": "string",
-      "metadata": {
-        "description": "Vnet address space"
-      }
+      "type": "string"
     }
 
 
   },
   "variables": {
-    "apiVersion": "2015-06-15",
+    "apiVersion": "2016-03-30",
     "Nic1Name": "[concat( parameters( 'fwVmName' ), '-NIC1' )]",
     "imagePublisher": "barracudanetworks",
     "imageOffer": "barracuda-ng-firewall",
@@ -110,7 +61,8 @@
     "fwSubnetSplit": "[split( parameters( 'fwSubnetAddress' ), '/' )]",
     "fwSubnetAddrSplit": "[split( variables( 'fwSubnetSplit' )[0], '.' )]",
     "fwSubnetMask": "[variables( 'fwSubnetSplit' )[1]]",
-    "fwSubnetDefaultGw": "[concat( variables( 'fwSubnetAddrSplit' )[0], '.', variables( 'fwSubnetAddrSplit' )[1], '.', variables( 'fwSubnetAddrSplit' )[2], '.', add( int( variables( 'fwSubnetAddrSplit' )[3]), 1 ))]"
+    "fwSubnetDefaultGw": "[concat( variables( 'fwSubnetAddrSplit' )[0], '.', variables( 'fwSubnetAddrSplit' )[1], '.', variables( 'fwSubnetAddrSplit' )[2], '.', add( int( variables( 'fwSubnetAddrSplit' )[3]), 1 ))]",
+    "fwVmSize": "[parameters( concat( 'fwVmSize_', parameters( 'newStorageAccountType' )))]"
   },
 
   "resources": [
@@ -220,7 +172,7 @@
       },
       "properties": {
         "hardwareProfile": {
-          "vmSize": "[parameters('fwVmSize')]"
+          "vmSize": "[variables('fwVmSize')]"
         },
         "networkProfile": {
           "networkInterfaces": [
