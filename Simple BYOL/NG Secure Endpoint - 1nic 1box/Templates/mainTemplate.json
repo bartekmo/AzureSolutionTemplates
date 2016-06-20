@@ -211,6 +211,10 @@
 
 
   ],
-    "outputs": {
+  "outputs": {
+    "publicIpDomainAddress": {
+      "type": "string",
+      "value": "[concat( parameters( 'publicIpDnsName' ), '.', resourceGroup().location, '.cloudapp.azure.com' )]"
     }
+  }
 }
