@@ -1,42 +1,45 @@
 ﻿{
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
-    "contentVersion": "1.0.0.0",
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
   "parameters": {
     "fwVmName": {
-      "value": "bam-ng4"
+      "value": "BarracudaSAC"
     },
-    "fwVmSize": {
-      "value": "Standard_A1"
+    "fwVmSize_Standard_LRS": {
+      "value": "Standard_D1"
     },
     "fwVmAddress": {
-      "value": "10.0.1.11"
+      "value": "10.17.0.4"
     },
     "fwSubnetName": {
       "value": "FirewallSubnet"
     },
     "fwSubnetAddress": {
-      "value": "10.0.1.0/24"
+      "value": "10.17.0.0/29"
+    },
+    "publicIpName": {
+      "value": "cudasacpip"
     },
     "publicIpDnsName": {
-      "value": "bam-ng4"
+      "value": "barracudasac"
     },
     "publicIpAddressType": {
       "value": "Dynamic"
     },
     "newStorageAccountName": {
-      "value": "bamng4"
+      "value": "newcudasacstorage"
     },
     "newStorageAccountType": {
       "value": "Standard_LRS"
     },
     "vnetName": {
-      "value": "bam-ng4-vnet"
+      "value": "newVirtualNetwork"
     },
     "vnetAddressSpace": {
-      "value": "10.0.0.0/16"
+      "value": "10.17.0.0/16"
     },
     "ccIpAddress": {
-      "value": "104.47.142.121"
+      "value": "1.2.3.4"
     },
     "ccClusterName": {
       "value": "test"
@@ -45,10 +48,7 @@
       "value": "1"
     },
     "ccSecret": {
-      "value": "alamakota"
-    },
-      "publicIpName": {
-          "value": "bam-ng4-pip"
-      }
+      "value": "a"
+    }
   }
 }
