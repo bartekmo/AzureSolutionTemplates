@@ -32,25 +32,25 @@
             "type": "Microsoft.Common.DropDown",
             "label": "Firewall Instance Size",
             "toolTip": "Choose instance size corresponding to your license",
-            "defaultValue": "Standard_D2_v2",
+            "defaultValue": "2",
             "constraints": {
               "required": true,
               "allowedValues": [
                 {
                   "label": "Small (Level 2)",
-                  "value": "Standard_A1"
+                  "value": "1"
                 },
                 {
                   "label": "Medium (Level 4)",
-                  "value": "Standard_D2_v2"
+                  "value": "2"
                 },
                 {
                   "label": "Large (Level 6)",
-                  "value": "Standard_D3_v2"
+                  "value": "3"
                 },
                 {
                   "label": "X-Large (Level 8)",
-                  "value": "Standard_DS4_v2"
+                  "value": "4"
                 }
               ]
             },
@@ -229,34 +229,18 @@
         "bladeTitle": "Advanced",
         "elements": [
           {
-            "name": "fwVmSize",
+            "name": "fwVmSizeStandard",
             "type": "Microsoft.Compute.SizeSelector",
             "label": "Virtual firewall instance size",
             "toolTip": "The size of virtual machine to provision.",
             "recommendedSizes": [
-              "[steps( 'DeployConfig' ).fwVmSizeBasic]",
-              "Standard_A1",
-              "Standard_D2_v2",
-              "Standard_D3_v2",
-              "Standard_D4_v2"
+              "[concat( 'Standard_D', steps( 'DeployConfig' ).fwVmSizeBasic )]",
+              "[concat( 'Standard_A', steps( 'DeployConfig' ).fwVmSizeBasic )]",
+              "[concat( 'Standard_D', steps( 'DeployConfig' ).fwVmSizeBasic, '_v2' )]"
             ],
             "constraints": {
-              "allowedSizes": [
-                "Standard_A1",
-                "Standard_A2",
-                "Standard_A3",
-                "Standard_A4",
-                "Standard_D2",
-                "Standard_D3",
-                "Standard_D4",
-                "Standard_D2_v2",
-                "Standard_D3_v2",
-                "Standard_D4_v2",
-                "Standard_DS2_v2",
-                "Standard_DS3_v2",
-                "Standard_DS4_v2"
-              ],
-              "required": true
+              "allowedSizes": [ ],
+              "required": "[equals( steps( 'DeployConfig' ).storageAccount.type, 'Standard_LRS' )]"
             },
             "osPlatform": "Linux",
             "imageReference": {
@@ -264,7 +248,39 @@
               "offer": "barracuda-ng-firewall",
               "sku": "byol"
             },
-            "count": "1"
+            "count": "1",
+            "visible": "[equals( steps( 'DeployConfig' ).storageAccount.type, 'Standard_LRS' )]"
+          },
+          {
+            "name": "fwVmSizePremium",
+            "type": "Microsoft.Compute.SizeSelector",
+            "label": "Virtual firewall instance size",
+            "toolTip": "The size of virtual machine to provision.",
+            "recommendedSizes": [
+              "[concat( 'Standard_DS', steps( 'DeployConfig' ).fwVmSizeBasic )]",
+              "[concat( 'Standard_DS', steps( 'DeployConfig' ).fwVmSizeBasic, '_v2' )]"
+            ],
+            "constraints": {
+              "allowedSizes": [
+                "Standard_DS1",
+                "Standard_DS2",
+                "Standard_DS3",
+                "Standard_DS4",
+                "Standard_DS1_v2",
+                "Standard_DS2_v2",
+                "Standard_DS3_v2",
+                "Standard_DS4_v2"
+              ],
+              "required": "[equals( steps( 'DeployConfig' ).storageAccount.type, 'Premium_LRS' )]"
+            },
+            "osPlatform": "Linux",
+            "imageReference": {
+              "publisher": "barracudanetworks",
+              "offer": "barracuda-ng-firewall",
+              "sku": "byol"
+            },
+            "count": "1",
+            "visible": "[equals( steps( 'DeployConfig' ).storageAccount.type, 'Premium_LRS' )]"
           }
 
         ]
@@ -272,13 +288,15 @@
     ],
     "outputs": {
       "fwVmName": "[basics( 'fwVmName' )]",
-      "fwVmSize": "[steps( 'AdvancedConfig' ).fwVmSize]",
+      "fwVmSize_Standard_LRS": "[steps( 'AdvancedConfig' ).fwVmSizeStandard]",
+      "fwVmSize_Premium_LRS": "[steps( 'AdvancedConfig' ).fwVmSizePremium]",
       "fwVmAddress": "[steps( 'NetworkConfig' ).fwVmAddress]",
       "fwSubnetName": "[steps( 'DeployConfig' ).virtualNetwork.subnets.fwSubnet.name]",
       "fwSubnetAddress": "[steps( 'DeployConfig' ).virtualNetwork.subnets.fwSubnet.addressPrefix]",
       "publicIpName": "[steps( 'NetworkConfig' ).publicIp.name]",
       "publicIpDnsName": "[steps( 'NetworkConfig' ).publicIp.domainNameLabel]",
       "publicIpAddressType": "Dynamic",
+      "publicIpNewOrNone": "[steps( 'NetworkConfig' ).publicIp.newOrExistingOrNone]",
       "newStorageAccountName": "[steps( 'DeployConfig' ).storageAccount.name]",
       "newStorageAccountType": "[steps( 'DeployConfig' ).storageAccount.type]",
       "vnetName": "[steps( 'DeployConfig' ).virtualNetwork.name]",

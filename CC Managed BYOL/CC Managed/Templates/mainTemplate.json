@@ -3,93 +3,46 @@
     "contentVersion": "1.0.0.0",
   "parameters": {
     "fwVmName": {
-      "type": "string",
-      "defaultValue": "BarracudaNGFW",
-      "metadata": {
-        "description": "Name of the firewall instance"
-      }
+      "type": "string"
     },
     "fwVmAddress": {
-      "type": "string",
-      "metadata": {
-        "description": "Private IP address of firewall instance"
-      }
+      "type": "string"
     },
-    "fwVmSize": {
-      "type": "string",
-      "allowedValues": [ "Standard_A1", "Standard_D2", "Standard_D2_v2", "Standard_D3_v2", "Standard_D4_v2", "Standard_DS3_v2", "Standard_DS4_v2" ],
-      "metadata": {
-        "description": "Firewall instance size"
-      }
+    "fwVmSize_Standard_LRS": {
+      "type": "string"
+    },
+    "fwVmSize_Premium_LRS": {
+      "type": "string"
     },
     "fwSubnetName": {
-      "type": "string",
-      "defaultValue": "firewallSubnet",
-      "metadata": {
-        "description": "Subnet name to deploy firewall"
-      }
+      "type": "string"
     },
     "fwSubnetAddress": {
-      "type": "string",
-      "metadata": {
-        "description": "Firewall Subnet address"
-      }
+      "type": "string"
     },
     "publicIpName": {
-      "type": "string",
-      "metadata": {
-        "description": "ARM resource name for public IP"
-      }
+      "type": "string"
     },
     "publicIpDnsName": {
-      "type": "string",
-      "metadata": {
-        "description": "Domain prefix for public IP DNS name"
-      }
+      "type": "string"
     },
     "publicIpAddressType": {
-      "type": "string",
-      "allowedValues": [
-        "Static",
-        "Dynamic"
-      ],
-      "metadata": {
-        "description": "Type of firewall public IP"
-      }
+      "type": "string"
+    },
+    "publicIpNewOrNone": {
+      "type": "string"
     },
     "newStorageAccountName": {
-      "type": "string",
-      "metadata": {
-        "description": "New storage account name"
-      }
+      "type": "string"
     },
     "newStorageAccountType": {
-      "type": "string",
-      "allowedValues": [
-        "Standard_LRS",
-        "Premium_LRS"
-      ],
-      "metadata": {
-        "description": "Type of new storage account"
-      }
-    },
-    "fwVmAddress": {
-      "type": "string",
-      "metadata": {
-        "description": "Private IP address of firewall instance"
-      }
+      "type": "string"
     },
     "vnetName": {
-      "type": "string",
-      "metadata": {
-        "description": "Vnet name"
-      }
+      "type": "string"
     },
     "vnetAddressSpace": {
-      "type": "string",
-      "metadata": {
-        "description": "Vnet address space"
-      }
+      "type": "string"
     },
     "ccClusterName": {
       "type": "string"
@@ -120,19 +73,47 @@
     "fwSubnetSplit": "[split( parameters( 'fwSubnetAddress' ), '/' )]",
     "fwSubnetAddrSplit": "[split( variables( 'fwSubnetSplit' )[0], '.' )]",
     "fwSubnetMask": "[variables( 'fwSubnetSplit' )[1]]",
-    "fwSubnetDefaultGw": "[concat( variables( 'fwSubnetAddrSplit' )[0], '.', variables( 'fwSubnetAddrSplit' )[1], '.', variables( 'fwSubnetAddrSplit' )[2], '.', add( int( variables( 'fwSubnetAddrSplit' )[3]), 1 ))]"
+    "fwSubnetDefaultGw": "[concat( variables( 'fwSubnetAddrSplit' )[0], '.', variables( 'fwSubnetAddrSplit' )[1], '.', variables( 'fwSubnetAddrSplit' )[2], '.', add( int( variables( 'fwSubnetAddrSplit' )[3]), 1 ))]",
+    "adminPasswd": "[uniqueString(resourceGroup().id)]",
+    "fwVmSize": "[parameters( concat( 'fwVmSize_', parameters( 'newStorageAccountType' )))]",
+    "templateBaseUrl": "[uri( 'deployment().properties.templateLink.uri', '')]",
+    "pipnicTemplateUri": "[uri( 'https://raw.github.com/bartekmo/AzureSolutionTemplates/tree/master/CC%20Managed%20BYOL/CC%20Managed/Templates', concat( 'pipnic-', parameters( 'publicIpNewOrNone' ), '.json' ))]"
   },
 
   "resources": [
     {
-      "apiVersion": "[variables( 'apiVersion' )]",
-      "type": "Microsoft.Network/publicIPAddresses",
-      "name": "[parameters('publicIPName')]",
-      "location": "[resourceGroup().location]",
+      "name": "NICandPIP",
+      "apiVersion": "2016-06-01",
+      "type": "Microsoft.Resources/deployments",
+      "dependsOn": [
+        "[variables( 'fwSubnetRef' )]"
+      ],
       "properties": {
-        "publicIPAllocationMethod": "[parameters('publicIpAddressType')]",
-        "dnsSettings": {
-          "domainNameLabel": "[parameters('publicIpDnsName')]"
+        "mode": "Incremental",
+        "templateLink": "[variables( 'pipnicTemplateUri' )]",
+        "contentVersion": "1.0.0.0"
+      },
+      "parameters": {
+        "fwVmAddress": {
+          "value": "[parameters( 'fwVmAddress' )]"
+        },
+        "publicIpName": {
+          "value": "[parameters( 'publicIpName' )]"
+        },
+        "publicIpDnsName": {
+          "value": "[parameters( 'publicIpDnsName' )]"
+        },
+        "publicIpAddressType": {
+          "value": "[parameters( 'publicIpAddressType' )]"
+        },
+        "Nic1Name": {
+          "value": "[variables( 'Nic1Name' )]"
+        },
+        "fwSubnetRef": {
+          "value": "[variables( 'fwSubnetRef' )]"
+        },
+        "publicIpRef": {
+          "value": "[variables( 'publicIpRef' )]"
         }
       }
     },
@@ -144,54 +125,6 @@
       "properties": {
         "accountType": "[parameters('newStorageAccountType')]"
       }
-    },
-    {
-      "apiVersion": "[variables( 'apiVersion' )]",
-      "type": "Microsoft.Network/routeTables",
-      "name": "[variables('defaultRouteTableName')]",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "routes": [
-          {
-            "name": "defaultRouteViaNG",
-            "properties": {
-              "addressPrefix": "0.0.0.0/0",
-              "nextHopType": "VirtualAppliance",
-              "nextHopIpAddress": "[parameters('fwVmAddress')]"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "apiVersion": "[variables( 'apiVersion' )]",
-      "type": "Microsoft.Network/networkInterfaces",
-      "name": "[variables('Nic1Name')]",
-      "location": "[resourceGroup().location]",
-      "dependsOn": [
-        "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIpName'))]"
-      ],
-        "properties"
-        :
-        {
-          "ipConfigurations": [
-            {
-              "name": "ipconfig",
-              "properties": {
-                "enableIPForwarding": true,
-                "privateIPAllocationMethod": "Static",
-                "privateIPAddress": "[parameters( 'fwVmAddress' )]",
-                "subnet": {
-                  "id": "[variables( 'fwSubnetRef' )]"
-                },
-                "publicIPAddress": {
-                  "id": "[variables( 'publicIpRef' )]"
-                }
-              }
-            }
-          ]
-
-        }
     },
     {
       "apiVersion": "[variables( 'apiVersion' )]",
@@ -230,7 +163,7 @@
       },
       "properties": {
         "hardwareProfile": {
-          "vmSize": "[parameters('fwVmSize')]"
+          "vmSize": "[variables('fwVmSize')]"
         },
         "networkProfile": {
           "networkInterfaces": [
@@ -261,14 +194,22 @@
         "osProfile": {
           "computerName": "[parameters('fwVmName')]",
           "adminUsername": "will-be-replaced-by-root",
-          "adminPassword": "will-be-replaced-by-PAR-file-content",
-          "customData": "[base64(concat('#!/bin/bash\n\n', '/opt/phion/bin/getpar -a ', parameters('ccIpAddress'), ' -r ', parameters( 'ccRangeId' ), ' -c ', parameters( 'ccClusterName' ), ' -b ', parameters( 'fwVmName' ), ' -s ', parameters( 'ccSecret' ), ' verbosity 10 >> /tmp/getpar.log'))]"
+          "adminPassword": "[variables( 'adminPasswd' )]",
+          "customData": "[base64(concat('#!/bin/bash\n\n', 'echo \"*/2 * * * * root echo \\\"', parameters( 'ccSecret' ), '\\\" | /opt/phion/bin/getpar -a ', parameters('ccIpAddress'), ' -r ', parameters( 'ccRangeId' ), ' -c ', parameters( 'ccClusterName' ), ' -b ', parameters( 'fwVmName' ), ' -d /opt/phion/update/box.par -s --verbosity 10 >> /tmp/getpar.log && /etc/rc.d/init.d/phion stop && /etc/rc.d/init.d/phion start && rm /etc/cron.d/getpar\" > /etc/cron.d/getpar\n'))]"
         }
       }
     }
 
 
   ],
-    "outputs": {
+  "outputs": {
+    "publicIpDomainAddress": {
+      "type": "string",
+      "value": "[concat( parameters( 'publicIpDnsName' ), '.', resourceGroup().location, '.cloudapp.azure.com' )]"
+    },
+    "adminPasswd": {
+      "type": "string",
+      "value": "[variables( 'adminPasswd' )]"
     }
+  }
 }
