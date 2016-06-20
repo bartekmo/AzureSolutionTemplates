@@ -1,0 +1,1 @@
+[![Deploy via Azure Portal](http://azuredeploy.net/deploybutton.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fbartekmo%2FAzureSolutionTemplates%2Fmaster%2FSAC%2FCC%20Managed%20new%20PIP%2FTemplates%2FmainTemplate.json)
