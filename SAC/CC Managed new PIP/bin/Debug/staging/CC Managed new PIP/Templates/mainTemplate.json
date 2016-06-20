@@ -14,9 +14,6 @@
     "fwVmSize_Premium_LRS": {
       "type": "string"
     },
-    "fwVmRootPasswd": {
-      "type": "securestring"
-    },
     "fwSubnetName": {
       "type": "string"
     },
@@ -43,12 +40,24 @@
     },
     "vnetAddressSpace": {
       "type": "string"
+    },
+    "ccClusterName": {
+      "type": "string"
+    },
+    "ccRangeId": {
+      "type": "string"
+    },
+    "ccIpAddress": {
+      "type": "string"
+    },
+    "ccSecret": {
+      "type": "securestring"
     }
 
 
   },
   "variables": {
-    "apiVersion": "2016-01-01",
+    "apiVersion": "2015-06-15",
     "Nic1Name": "[concat( parameters( 'fwVmName' ), '-NIC1' )]",
     "imagePublisher": "barracudanetworks",
     "imageOffer": "barracuda-ng-firewall",
@@ -203,8 +212,8 @@
         "osProfile": {
           "computerName": "[parameters('fwVmName')]",
           "adminUsername": "will-be-replaced-by-root",
-          "adminPassword": "[parameters('fwVmRootPasswd')]",
-          "customData": "[base64(concat('#!/bin/bash\n\n', '/opt/phion/bin/cloud-setmip ', parameters('fwVmAddress'), ' ', variables( 'fwSubnetMask' ), ' ', variables( 'fwSubnetDefaultGw' ), ' >> /tmp/setmip.log'))]"
+          "adminPassword": "will-be-replaced-by-PAR-file-content",
+          "customData": "[base64(concat('#!/bin/bash\n\n', 'echo \"', parameters( 'ccSecret' ), '\" | /opt/phion/bin/getpar -a ', parameters('ccIpAddress'), ' -r ', parameters( 'ccRangeId' ), ' -c ', parameters( 'ccClusterName' ), ' -b ', parameters( 'fwVmName' ), ' -s -- verbosity 10 >> /tmp/getpar.log\n/etc/rc.d/init.d/phion stop\n/etc/rc.d/init.d/phion start\n'))]"
         }
       }
     }

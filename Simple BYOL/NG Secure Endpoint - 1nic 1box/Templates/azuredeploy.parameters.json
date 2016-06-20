@@ -1,6 +1,45 @@
 ﻿{
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {
+  "parameters": {
+    "fwVmName": {
+      "value": "test-simple01"
+    },
+    "fwVmSize_Standard_LRS": {
+      "value": "Standard_D2"
+    },
+    "fwVmAddress": {
+      "value": "10.18.0.4"
+    },
+    "fwVmRootPasswd": {
+      "value": "asd123."
+    },
+    "fwSubnetName": {
+      "value": "FirewallSubnet"
+    },
+    "fwSubnetAddress": {
+      "value": "10.18.0.0/29"
+    },
+    "publicIpName": {
+      "value": "test-simple01"
+    },
+    "publicIpDnsName": {
+      "value": "test-simple01"
+    },
+    "publicIpAddressType": {
+      "value": "Dynamic"
+    },
+    "newStorageAccountName": {
+      "value": "testsimple01"
+    },
+    "newStorageAccountType": {
+      "value": "Standard_LRS"
+    },
+    "vnetName": {
+      "value": "newVirtualNetwork"
+    },
+    "vnetAddressSpace": {
+      "value": "10.18.0.0/16"
     }
+  }
 }

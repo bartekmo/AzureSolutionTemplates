@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "fwVmName": {
-      "value": "BarracudaSAC"
+      "value": "bam-ng1"
     },
     "fwVmSize_Standard_LRS": {
       "value": "Standard_D1"
@@ -39,7 +39,7 @@
       "value": "10.17.0.0/16"
     },
     "ccIpAddress": {
-      "value": "1.2.3.4"
+      "value": "104.47.142.121"
     },
     "ccClusterName": {
       "value": "test"
@@ -49,6 +49,9 @@
     },
     "ccSecret": {
       "value": "a"
-    }
+    },
+      "fwVmSize_Premium_LRS": {
+          "value": "a"
+      }
   }
 }
