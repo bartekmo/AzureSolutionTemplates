@@ -3,11 +3,7 @@
     "contentVersion": "1.0.0.0",
   "parameters": {
     "fwVmName": {
-      "type": "string",
-      "defaultValue": "BarracudaNGFW",
-      "metadata": {
-        "description": "Name of the firewall instance"
-      }
+      "type": "string"
     },
     "fwVmAddress": {
       "type": "string",
