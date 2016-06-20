@@ -1,0 +1,54 @@
+﻿{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+  "parameters": {
+    "fwVmName": {
+      "value": "bam-ng4"
+    },
+    "fwVmSize": {
+      "value": "Standard_A1"
+    },
+    "fwVmAddress": {
+      "value": "10.0.1.11"
+    },
+    "fwSubnetName": {
+      "value": "FirewallSubnet"
+    },
+    "fwSubnetAddress": {
+      "value": "10.0.1.0/24"
+    },
+    "publicIpDnsName": {
+      "value": "bam-ng4"
+    },
+    "publicIpAddressType": {
+      "value": "Dynamic"
+    },
+    "newStorageAccountName": {
+      "value": "bamng4"
+    },
+    "newStorageAccountType": {
+      "value": "Standard_LRS"
+    },
+    "vnetName": {
+      "value": "bam-ng4-vnet"
+    },
+    "vnetAddressSpace": {
+      "value": "10.0.0.0/16"
+    },
+    "ccIpAddress": {
+      "value": "104.47.142.121"
+    },
+    "ccClusterName": {
+      "value": "test"
+    },
+    "ccRangeId": {
+      "value": "1"
+    },
+    "ccSecret": {
+      "value": "alamakota"
+    },
+      "publicIpName": {
+          "value": "bam-ng4-pip"
+      }
+  }
+}

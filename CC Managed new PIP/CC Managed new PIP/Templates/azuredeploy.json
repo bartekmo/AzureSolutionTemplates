@@ -1,0 +1,274 @@
+﻿{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+  "parameters": {
+    "fwVmName": {
+      "type": "string",
+      "defaultValue": "BarracudaNGFW",
+      "metadata": {
+        "description": "Name of the firewall instance"
+      }
+    },
+    "fwVmAddress": {
+      "type": "string",
+      "metadata": {
+        "description": "Private IP address of firewall instance"
+      }
+    },
+    "fwVmSize": {
+      "type": "string",
+      "allowedValues": [ "Standard_A1", "Standard_D2", "Standard_D2_v2", "Standard_D3_v2", "Standard_D4_v2", "Standard_DS3_v2", "Standard_DS4_v2" ],
+      "metadata": {
+        "description": "Firewall instance size"
+      }
+    },
+    "fwSubnetName": {
+      "type": "string",
+      "defaultValue": "firewallSubnet",
+      "metadata": {
+        "description": "Subnet name to deploy firewall"
+      }
+    },
+    "fwSubnetAddress": {
+      "type": "string",
+      "metadata": {
+        "description": "Firewall Subnet address"
+      }
+    },
+    "publicIpName": {
+      "type": "string",
+      "metadata": {
+        "description": "ARM resource name for public IP"
+      }
+    },
+    "publicIpDnsName": {
+      "type": "string",
+      "metadata": {
+        "description": "Domain prefix for public IP DNS name"
+      }
+    },
+    "publicIpAddressType": {
+      "type": "string",
+      "allowedValues": [
+        "Static",
+        "Dynamic"
+      ],
+      "metadata": {
+        "description": "Type of firewall public IP"
+      }
+    },
+    "newStorageAccountName": {
+      "type": "string",
+      "metadata": {
+        "description": "New storage account name"
+      }
+    },
+    "newStorageAccountType": {
+      "type": "string",
+      "allowedValues": [
+        "Standard_LRS",
+        "Premium_LRS"
+      ],
+      "metadata": {
+        "description": "Type of new storage account"
+      }
+    },
+    "fwVmAddress": {
+      "type": "string",
+      "metadata": {
+        "description": "Private IP address of firewall instance"
+      }
+    },
+    "vnetName": {
+      "type": "string",
+      "metadata": {
+        "description": "Vnet name"
+      }
+    },
+    "vnetAddressSpace": {
+      "type": "string",
+      "metadata": {
+        "description": "Vnet address space"
+      }
+    },
+    "ccClusterName": {
+      "type": "string"
+    },
+    "ccRangeId": {
+      "type": "string"
+    },
+    "ccIpAddress": {
+      "type": "string"
+    },
+    "ccSecret": {
+      "type": "securestring"
+    }
+
+
+  },
+  "variables": {
+    "apiVersion": "2015-06-15",
+    "Nic1Name": "[concat( parameters( 'fwVmName' ), '-NIC1' )]",
+    "imagePublisher": "barracudanetworks",
+    "imageOffer": "barracuda-ng-firewall",
+    "imageSku": "byol",
+    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',parameters('vnetName'))]",
+    "fwSubnetRef": "[concat(variables('vnetID'),'/subnets/',parameters('fwSubnetName'))]",
+    "publicIpRef": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('publicIPName'))]",
+    "defaultRouteTableName": "[concat( 'route-via-', parameters( 'fwVmName' ), '-', resourceGroup().name )]",
+    "vmStorageAccountContainerName": "vhds",
+    "fwSubnetSplit": "[split( parameters( 'fwSubnetAddress' ), '/' )]",
+    "fwSubnetAddrSplit": "[split( variables( 'fwSubnetSplit' )[0], '.' )]",
+    "fwSubnetMask": "[variables( 'fwSubnetSplit' )[1]]",
+    "fwSubnetDefaultGw": "[concat( variables( 'fwSubnetAddrSplit' )[0], '.', variables( 'fwSubnetAddrSplit' )[1], '.', variables( 'fwSubnetAddrSplit' )[2], '.', add( int( variables( 'fwSubnetAddrSplit' )[3]), 1 ))]"
+  },
+
+  "resources": [
+    {
+      "apiVersion": "[variables( 'apiVersion' )]",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[parameters('publicIPName')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "publicIPAllocationMethod": "[parameters('publicIpAddressType')]",
+        "dnsSettings": {
+          "domainNameLabel": "[parameters('publicIpDnsName')]"
+        }
+      }
+    },
+    {
+      "apiVersion": "[variables( 'apiVersion' )]",
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[parameters('newStorageAccountName')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "accountType": "[parameters('newStorageAccountType')]"
+      }
+    },
+    {
+      "apiVersion": "[variables( 'apiVersion' )]",
+      "type": "Microsoft.Network/routeTables",
+      "name": "[variables('defaultRouteTableName')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "routes": [
+          {
+            "name": "defaultRouteViaNG",
+            "properties": {
+              "addressPrefix": "0.0.0.0/0",
+              "nextHopType": "VirtualAppliance",
+              "nextHopIpAddress": "[parameters('fwVmAddress')]"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "[variables( 'apiVersion' )]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[variables('Nic1Name')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIpName'))]"
+      ],
+        "properties"
+        :
+        {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig",
+              "properties": {
+                "enableIPForwarding": true,
+                "privateIPAllocationMethod": "Static",
+                "privateIPAddress": "[parameters( 'fwVmAddress' )]",
+                "subnet": {
+                  "id": "[variables( 'fwSubnetRef' )]"
+                },
+                "publicIPAddress": {
+                  "id": "[variables( 'publicIpRef' )]"
+                }
+              }
+            }
+          ]
+
+        }
+    },
+    {
+      "apiVersion": "[variables( 'apiVersion' )]",
+      "type": "Microsoft.Network/virtualNetworks",
+      "name": "[parameters('vnetName')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[parameters('vnetAddressSpace')]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "[parameters( 'fwSubnetName' )]",
+            "properties": {
+              "addressPrefix": "[parameters( 'fwSubnetAddress' )]"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "[variables( 'apiVersion' )]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[parameters('fwVmName')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId( 'Microsoft.Network/networkInterfaces', variables('Nic1Name') )]",
+        "[resourceId( 'Microsoft.Storage/storageAccounts', parameters( 'newStorageAccountName' ))]"
+      ],
+      "plan": {
+        "name": "[variables('imageSku')]",
+        "Product": "[variables('imageOffer')]",
+        "Publisher": "[variables('imagePublisher')]"
+      },
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[parameters('fwVmSize')]"
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId( 'Microsoft.Network/networkInterfaces/',variables('Nic1Name'))]",
+              "properties": {
+                "primary": true
+              }
+            }
+          ]
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "[variables('imagePublisher')]",
+            "offer": "[variables('imageOffer')]",
+            "sku": "[variables('imageSku')]",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "[concat(parameters('fwVmName'),'-osDisk')]",
+            "caching": "ReadWrite",
+            "createOption": "FromImage",
+            "vhd": {
+              "uri": "[concat('https://',parameters('newStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/',parameters('fwVmName'),'.vhd')]"
+            }
+          }
+        },
+        "osProfile": {
+          "computerName": "[parameters('fwVmName')]",
+          "adminUsername": "will-be-replaced-by-root",
+          "adminPassword": "will-be-replaced-by-PAR-file-content",
+          "customData": "[base64(concat('#!/bin/bash\n\n', 'echo \"', parameters( 'ccSecret' ), '\" | /opt/phion/bin/getpar -a ', parameters('ccIpAddress'), ' -r ', parameters( 'ccRangeId' ), ' -c ', parameters( 'ccClusterName' ), ' -b ', parameters( 'fwVmName' ), ' -s -- verbosity 10 >> /tmp/getpar.log'))]"
+        }
+      }
+    }
+
+
+  ],
+    "outputs": {
+    }
+}

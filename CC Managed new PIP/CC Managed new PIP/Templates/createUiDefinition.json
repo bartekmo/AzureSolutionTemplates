@@ -1,0 +1,296 @@
+{
+  "handler": "Microsoft.Compute.MultiVm",
+  "version": "0.0.1-preview",
+  "parameters": {
+    "basics": [
+      {
+        "name": "fwVmName",
+        "type": "Microsoft.Common.TextBox",
+        "label": "Firewall Instance Host Name",
+        "toolTip": "Provide host name for newly created instance of Barracuda NextGen Firewall F",
+        "defaultValue": "BarracudaNGFW",
+        "constraints": {
+          "required": true,
+          "regex": "^[A-Za-z0-9-_]{1,15}$",
+          "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1 to 15 characters."
+        }
+      }
+
+    ],
+    "steps": [
+      {
+        "name": "DeployConfig",
+        "label": "Deployment Options",
+        "subLabel": {
+          "preValidation": "Define where to deploy your firewall",
+          "postValidation": "Done"
+        },
+        "bladeTitle": "Deployment Options",
+        "elements": [
+          {
+            "name": "fwVmSizeBasic",
+            "type": "Microsoft.Common.DropDown",
+            "label": "Firewall Instance Size",
+            "toolTip": "Choose instance size corresponding to your license",
+            "defaultValue": "Standard_D2_v2",
+            "constraints": {
+              "required": true,
+              "allowedValues": [
+                {
+                  "label": "Small (Level 2)",
+                  "value": "Standard_A1"
+                },
+                {
+                  "label": "Medium (Level 4)",
+                  "value": "Standard_D2_v2"
+                },
+                {
+                  "label": "Large (Level 6)",
+                  "value": "Standard_D3_v2"
+                },
+                {
+                  "label": "X-Large (Level 8)",
+                  "value": "Standard_DS4_v2"
+                }
+              ]
+            },
+            "visible": true
+          },
+          {
+            "name": "storageAccount",
+            "type": "Microsoft.Storage.StorageAccountSelector",
+            "label": "Storage Account",
+            "toolTip": "Storage Account for the disk drive of the Barracuda NextGen Firewall",
+            "defaultValue": {
+              "type": "Standard_LRS"
+            },
+            "constraints": {
+              "allowedTypes": [
+                "Standard_LRS",
+                "Premium_LRS"
+              ],
+              "required": true
+            },
+            "options": {
+              "hideExisting": true
+            }
+          },
+          {
+            "name": "virtualNetwork",
+            "type": "Microsoft.Network.VirtualNetworkCombo",
+            "label": {
+              "virtualNetwork": "Virtual network",
+              "subnets": "Subnets"
+            },
+            "toolTip": {
+              "virtualNetwork": "Virtual Network Name",
+              "subnets": "Create a separate subnet for Barracuda NGFW"
+            },
+            "defaultValue": {
+              "name": "newVirtualNetwork",
+              "addressPrefixSize": "/16"
+            },
+            "constraints": {
+              "minAddressPrefixSize": "/24"
+            },
+            "options": {
+              "hideExisting": true
+            },
+            "subnets": {
+              "fwSubnet": {
+                "label": "Firewall Subnet",
+                "defaultValue": {
+                  "name": "FirewallSubnet",
+                  "addressPrefixSize": "/29"
+                },
+                "constraints": {
+                  "minAddressPrefixSize": "/30",
+                  "minAddressCount": 2,
+                  "requireContiguousAddresses": false
+                }
+              }
+
+            }
+          }
+        ]
+      },
+      {
+        "name": "NetworkConfig",
+        "label": "Network Configuration",
+        "subLabel": {
+          "preValidation": "Configure basic network settings",
+          "postValidation": "Done"
+        },
+        "bladeTitle": "Network Configuration",
+        "elements": [
+          {
+            "name": "fwVmAddress",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Barracuda NextGen Firewall Private IP Address",
+            "toolTip": "Provide IP address from Firewall Subnet defined above",
+            "defaultValue": "[steps( 'DeployConfig' ).virtualNetwork.subnets.fwSubnet.startAddress]",
+            "constraints": {
+              "required": false,
+              "regex": "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])$",
+              "validationMessage": "Must be a valid IPv4 address from Firewall Subnet"
+            }
+          },
+          {
+            "name": "publicIp",
+            "type": "Microsoft.Network.PublicIpAddressCombo",
+            "label": {
+              "publicIpAddress": "Public IP Address Name",
+              "domainNameLabel": "Domain Name Label"
+            },
+            "toolTip": {
+              "publicIpAddress": "Name of public IP address ARM resource",
+              "domainNameLabel": "Prefix to use for public IP address DNS name (e.g. [prefix].region.cloudapp.azure.com)"
+            },
+            "defaultValue": {
+              "publicIpAddress": "[concat( basics( 'fwVmName' ), '-pip' )]",
+              "domainNameLabel": "[basics( 'fwVmName' )]"
+            },
+            "options": {
+              "hideNone": true,
+              "hideDomainNameLabel": false,
+              "hideExisting": true
+            },
+            "constraints": {
+              "required": false
+            },
+            "visible": true
+          }
+
+        ]
+      },
+      {
+        "name": "CCConfig",
+        "label": "NextGen Control Center",
+        "subLabel": {
+          "preValidation": "Connect to NextGen Control Center",
+          "postValidation": "Done"
+        },
+        "bladeTitle": "NextGen Control Center Connection",
+        "elements": [
+          {
+            "name": "ccIpAddress",
+            "type": "Microsoft.Common.TextBox",
+            "label": "IP Address of Control Center",
+            "toolTip": "Publicly reachable IP address of Control Center",
+            "constraints": {
+              "required": true,
+              "regex": "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])$",
+              "validationMessage": "Must be a valid IPv4 address of NGCC"
+            }
+          },
+          {
+            "name": "ccRangeId",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Range ID for firewall box",
+            "toolTip": "ID number of NGCC range hosting deployed NGFW instance configuration",
+            "constraints": {
+              "required": true,
+              "regex": "^[0-9]{1,2}$",
+              "validationMessage": "Must be a range ID number"
+            }
+          },
+          {
+            "name": "ccClusterName",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Cluster name for firewall box",
+            "toolTip": "Name of cluster hosting deployed NGFW instance configuration",
+            "constraints": {
+              "required": true,
+              "regex": "^[a-zA-Z0-9-]{1,16}$",
+              "validationMessage": "Must be a valid NGCC cluster name"
+            }
+          },
+          {
+            "name": "ccSecret",
+            "type": "Microsoft.Common.TextBox",
+            "label": "PAR file retrieval key",
+            "toolTip": "PAR file retrieval shared key from Box Properties > Operational settings",
+            "constraints": {
+              "required": true
+            },
+            "options": {
+              "hideConfirmation": true
+            }
+          }
+        ]
+      },
+      {
+        "name": "AdvancedConfig",
+        "label": "Advanced",
+        "subLabel": {
+          "preValidation": "Advanced Settings",
+          "postValidation": "Done"
+        },
+        "bladeTitle": "Advanced",
+        "elements": [
+          {
+            "name": "fwVmSize",
+            "type": "Microsoft.Compute.SizeSelector",
+            "label": "Virtual firewall instance size",
+            "toolTip": "The size of virtual machine to provision.",
+            "recommendedSizes": [
+              "[steps( 'DeployConfig' ).fwVmSizeBasic]",
+              "Standard_A1",
+              "Standard_D2_v2",
+              "Standard_D3_v2",
+              "Standard_D4_v2"
+            ],
+            "constraints": {
+              "allowedSizes": [
+                "Standard_A1",
+                "Standard_A2",
+                "Standard_A3",
+                "Standard_A4",
+                "Standard_D2",
+                "Standard_D3",
+                "Standard_D4",
+                "Standard_D2_v2",
+                "Standard_D3_v2",
+                "Standard_D4_v2",
+                "Standard_DS2_v2",
+                "Standard_DS3_v2",
+                "Standard_DS4_v2"
+              ],
+              "required": true
+            },
+            "osPlatform": "Linux",
+            "imageReference": {
+              "publisher": "barracudanetworks",
+              "offer": "barracuda-ng-firewall",
+              "sku": "byol"
+            },
+            "count": "1"
+          }
+
+        ]
+      }
+    ],
+    "outputs": {
+      "fwVmName": "[basics( 'fwVmName' )]",
+      "fwVmSize": "[steps( 'AdvancedConfig' ).fwVmSize]",
+      "fwVmAddress": "[steps( 'NetworkConfig' ).fwVmAddress]",
+      "fwSubnetName": "[steps( 'DeployConfig' ).virtualNetwork.subnets.fwSubnet.name]",
+      "fwSubnetAddress": "[steps( 'DeployConfig' ).virtualNetwork.subnets.fwSubnet.addressPrefix]",
+      "publicIpName": "[steps( 'NetworkConfig' ).publicIp.name]",
+      "publicIpDnsName": "[steps( 'NetworkConfig' ).publicIp.domainNameLabel]",
+      "publicIpAddressType": "Dynamic",
+      "newStorageAccountName": "[steps( 'DeployConfig' ).storageAccount.name]",
+      "newStorageAccountType": "[steps( 'DeployConfig' ).storageAccount.type]",
+      "vnetName": "[steps( 'DeployConfig' ).virtualNetwork.name]",
+      "vnetAddressSpace": "[steps( 'DeployConfig').virtualNetwork.addressPrefix]",
+      "ccIpAddress": "[steps( 'CCConfig' ).ccIpAddress]",
+      "ccClusterName": "[steps( 'CCConfig' ).ccClusterName]",
+      "ccRangeId": "[steps( 'CCConfig' ).ccRangeId]",
+      "ccSecret": "[steps( 'CCConfig' ).ccSecret]"
+    }
+  }
+
+
+
+
+}
