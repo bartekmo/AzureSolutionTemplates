@@ -1,0 +1,227 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "firewallVmName": {
+      "type": "string"
+    },
+    "dnsNameForPublicIP": {
+      "type": "string"
+    },
+    "virtualNetworkName": {
+      "type": "string"
+    },
+    "vnetAddressSpace": {
+      "type": "string"
+    },
+    "instanceSize": {
+      "type": "string"
+    },
+    "adminPassword": {
+      "type": "securestring"
+    },
+    "newStorageAccountName": {
+      "type": "string"
+    },
+    "newStorageAccountType": {
+      "type": "string"
+    },
+    "publicIpName": {
+      "type": "string"
+    },
+    "publicIpAddressType": {
+      "type": "string"
+    },
+    "publicIpDnsName": {
+      "type": "string"
+    },
+    "fwVmSize_Standard_LRS": {
+      "type": "string"
+    },
+    "fwVmSize_Premium_LRS": {
+      "type": "string"
+    }
+
+  },
+  "variables": {
+    "location": "[resourceGroup().location]",
+    "imagePublisher": "barracudanetworks",
+    "imageOffer": "barracuda-ng-firewall",
+    "imageSku": "byol",
+    "fwVmSize": "[parameters( concat( 'fwVmSize_', parameters( 'newStorageAccountType' )))]",
+    "vmStorageAccountContainerName": "vhds",
+    "nicName": "[concat( 'ngfNIC-', replace(resourceGroup().name, '-', ''))]",
+    "adminUsername": "will_be_replaced_by_root",
+    "osType": "linux",
+    "vnetId": "[resourceId('Microsoft.Network/virtualNetworks',parameters( 'virtualNetworkName' ))]",
+    "storageId": "[resourceId( 'Microsoft.Storage/storageAccounts', parameters( 'newStorageAccountName' ))]",
+    "subnet1Ref": "[concat(variables('vnetID'),'/subnets/',parameters( 'fwSubnetName' ))]",
+    "publicIpRef": "[resourceId( 'Microsoft.Network/publicIPAddresses', parameters( 'publicIPName' ))]",
+    "lbPoolID": "[concat(variables('lbID'),'/backendAddressPools/BackendPool1')]",
+    "lbSSLProbeID": "[concat(variables('lbID'),'/probes/tcpSSLProbe')]",
+    "lbVPNProbeID": "[concat(variables('lbID'),'/probes/tcpVPNProbe')]",
+    "routeTableName": "[concat('default-via-', replace(parameters('firewallVmName'), '-', ''))]",
+    "apiVersion": "2016-01-01",
+    "deployByCountUri": "[concat( variables( 'artifactsUriBase' ), parameters( 'fwVmCount' ))]",
+    "deployPublicIpUri": "[concat( variables(), '/publicIp', parameters( 'publicIpNewOrNone' ))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[parameters('newStorageAccountName')]",
+      "displayName": "Storage Account",
+      "apiVersion": "[variables( 'apiVersion' )]",
+      "location": "[variables('location')]",
+      "properties": {
+        "accountType": "[parameters('newStorageAccountType')]"
+      }
+    },
+    {
+      "name": "publicIp",
+      "apiVersion": "2016-06-01",
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": "[variables( 'deployPublicIpUri' )]",
+        "contentVersion": "1.0.0.0"
+      },
+      "parameters": {
+        "publicIpName": {
+          "value": "[parameters( 'publicIpName' )]"
+        },
+        "publicIpDnsName": {
+          "value": "[parameters( 'publicIpDnsName' )]"
+        },
+        "publicIpAddressType": {
+          "value": "[parameters( 'publicIpAddressType' )]"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Network/routeTables",
+      "name": "[variables('routeTableName')]",
+      "displayName": "Routing Table",
+      "location": "[variables('location')]",
+      "properties": {
+        "routes": [
+          {
+            "name": "defaultRouteViaNG",
+            "properties": {
+              "addressPrefix": "0.0.0.0/0",
+              "nextHopType": "VirtualAppliance",
+              "nextHopIpAddress": "[parameters('fwVmAddress1')]"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Network/virtualNetworks",
+      "name": "[parameters('virtualNetworkName')]",
+      "location": "[variables('location')]",
+      "dependsOn": [ "[concat('Microsoft.Network/routeTables/', variables('routeTableName'))]" ],
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[parameters('vnetAddressSpace')]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "[parameters( 'fwSubnetName' )]",
+            "properties": {
+              "addressPrefix": "[parameters( 'fwSubnetAddress' )]"
+            }
+          },
+          {
+            "name": "[parameters( 'tier1SubnetName' )]",
+            "properties": {
+              "addressPrefix": "[parameters( 'tier1SubnetAddress' )]",
+              "routeTable": {
+                "id": "[resourceId('Microsoft.Network/routeTables', variables('routeTableName'))]"
+              }
+            }
+          },
+          {
+            "name": "[parameters( 'tier2SubnetName' )]",
+            "properties": {
+              "addressPrefix": "[[parameters( 'tier2SubnetAddress' )]",
+              "routeTable": {
+                "id": "[resourceId('Microsoft.Network/routeTables', variables('routeTableName'))]"
+              }
+            }
+          },
+          {
+            "name": "[parameters( 'tier3SubnetName' )]",
+            "properties": {
+              "addressPrefix": "[parameters( 'tier3SubnetAddress' )]",
+              "routeTable": {
+                "id": "[resourceId('Microsoft.Network/routeTables', variables('routeTableName'))]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "[parameters( 'fwVmCount' )]",
+      "apiVersion": "2016-06-01",
+      "type": "Microsoft.Resources/deployments",
+      "dependsOn": [
+        "[variables( 'vnetId' )]",
+        "[variables( 'storageId' )]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables( 'deployByCountUri' )]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "dependPublicIp": {
+            "value": "[variables( 'publicIpRef' )]"
+          },
+          "haSetName": {
+            "value": "[parameters( 'haSetName' )]"
+          },
+          "fwVmName": {
+
+          },
+          "fwVmSize": {
+            "value": "[variables( 'fwVmSize' )]"
+          },
+          "fwVmAddress1": {
+            "value": "[parameters( 'fwVmAddress1' )]"
+          },
+          "fwVmAddress2": {
+            "value": "[parameters( 'fwVmAddress2' )]"
+          },
+          "publicIpName": {
+            "value": "[parameters( 'publicIpName' )]"
+          },
+          "publicIpAddressType": {
+            "value": "[parameters( 'publicIpAddressType' )]"
+          },
+          "publicIpDnsName": {
+            "value": "[parameters( 'publicIpDnsName' )]"
+          },
+          "Nic1Name": {
+            "value": "[variables( 'Nic1Name' )]"
+          },
+          "fwSubnetRef": {
+            "value": "[variables( 'fwSubnetRef' )]"
+          },
+          "publicIpRef": {
+            "value": "[variables( 'publicIpRef' )]"
+          },
+          "imageSku": {
+            "value": "[variables( 'imageSku' )]"
+          }
+        }
+      }
+
+    }
+
+
+  ]
+}

@@ -1,0 +1,78 @@
+﻿{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+  "parameters": {
+    "fwVmName": {
+      "value": "bam-ngmtier1"
+    },
+    "fwVmSize_Standard_LRS": {
+      "value": "Standard_D2"
+    },
+    "fwVmAddress1": {
+      "value": "10.16.0.4"
+    },
+    "fwVmAddress2": {
+      "value": "10.16.0.5"
+    },
+    "fwVmRootPasswd": {
+      "value": "asd123."
+    },
+    "fwSubnetName": {
+      "value": "FirewallSubnet"
+    },
+    "fwSubnetAddress": {
+      "value": "10.16.0.0/29"
+    },
+    "tier1SubnetName": {
+      "value": "Tier1Subnet"
+    },
+    "tier1SubnetAddress": {
+      "value": "10.16.1.0/24"
+    },
+    "tier2SubnetName": {
+      "value": "Tier2Subnet"
+    },
+    "tier2SubnetAddress": {
+      "value": "10.16.2.0/24"
+    },
+    "tier3SubnetName": {
+      "value": "Tier3Subnet"
+    },
+    "tier3SubnetAddress": {
+      "value": "10.16.3.0/24"
+    },
+    "publicIpName": {
+      "value": "bam-ngmtier1"
+    },
+    "publicIpDnsName": {
+      "value": "ngmtier1"
+    },
+    "publicIpAddressType": {
+      "value": "Dynamic"
+    },
+    "publicIpNewOrNone": {
+      "value": "new"
+    },
+    "newStorageAccountName": {
+      "value": "bamngmtier1"
+    },
+    "newStorageAccountType": {
+      "value": "Standard_LRS"
+    },
+    "vnetName": {
+      "value": "MultiTierVnet"
+    },
+    "vnetAddressSpace": {
+      "value": "10.16.0.0/16"
+    },
+    "lbName": {
+      "value": "loadbal-ngmtier1"
+    },
+    "haSetName": {
+      "value": "haSet-ngmtier1"
+    },
+    "fwVmCount": {
+      "value": "HACluster"
+    }
+  }
+}
