@@ -71,7 +71,8 @@
     "fwSubnetAddrSplit": "[split( variables( 'fwSubnetSplit' )[0], '.' )]",
     "fwSubnetMask": "[variables( 'fwSubnetSplit' )[1]]",
     "fwSubnetDefaultGw": "[concat( variables( 'fwSubnetAddrSplit' )[0], '.', variables( 'fwSubnetAddrSplit' )[1], '.', variables( 'fwSubnetAddrSplit' )[2], '.', add( int( variables( 'fwSubnetAddrSplit' )[3]), 1 ))]",
-    "fwVmSize": "[parameters( concat( 'fwVmSize_', parameters( 'newStorageAccountType' )))]"
+    "fwVmSize": "[parameters( concat( 'fwVmSize_', parameters( 'newStorageAccountType' )))]",
+    "adminPasswd": "[uniqueString(resourceGroup().id)]"
   },
 
   "resources": [
@@ -212,8 +213,8 @@
         "osProfile": {
           "computerName": "[parameters('fwVmName')]",
           "adminUsername": "will-be-replaced-by-root",
-          "adminPassword": "will-be-replaced-by-PAR-file-content",
-          "customData": "[base64(concat('#!/bin/bash\n\n', 'echo \"', parameters( 'ccSecret' ), '\" | /opt/phion/bin/getpar -a ', parameters('ccIpAddress'), ' -r ', parameters( 'ccRangeId' ), ' -c ', parameters( 'ccClusterName' ), ' -b ', parameters( 'fwVmName' ), ' -d /opt/phion/update/box.par -s -- verbosity 10 >> /tmp/getpar.log\n/etc/rc.d/init.d/phion stop\n/etc/rc.d/init.d/phion start\n'))]"
+          "adminPassword": "[variables( 'adminPasswd' )]",
+          "customData": "[base64(concat('#!/bin/bash\n\n', 'echo \"*/2 * * * * root echo \\\"', parameters( 'ccSecret' ), '\\\" | /opt/phion/bin/getpar -a ', parameters('ccIpAddress'), ' -r ', parameters( 'ccRangeId' ), ' -c ', parameters( 'ccClusterName' ), ' -b ', parameters( 'fwVmName' ), ' -d /opt/phion/update/box.par -s --verbosity 10 >> /tmp/getpar.log && /etc/rc.d/init.d/phion stop && /etc/rc.d/init.d/phion start && rm /etc/cron.d/getpar\" > /etc/cron.d/getpar\n'))]"
         }
       }
     }
@@ -224,6 +225,10 @@
     "publicIpDomainAddress": {
       "type": "string",
       "value": "[concat( parameters( 'publicIpDnsName' ), '.', resourceGroup().location, '.cloudapp.azure.com' )]"
+    },
+    "adminPasswd": {
+      "type": "string",
+      "value": "[variables( 'adminPasswd' )]"
     }
   }
 }

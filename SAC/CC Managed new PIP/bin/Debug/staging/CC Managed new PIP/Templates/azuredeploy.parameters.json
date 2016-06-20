@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "fwVmName": {
-      "value": "bam-ng1"
+      "value": "bam-ng3"
     },
     "fwVmSize_Standard_LRS": {
       "value": "Standard_D1"
@@ -18,16 +18,16 @@
       "value": "10.17.0.0/29"
     },
     "publicIpName": {
-      "value": "cudasacpip"
+      "value": "bam-ng3-pip"
     },
     "publicIpDnsName": {
-      "value": "barracudasac"
+      "value": "bam-ng3"
     },
     "publicIpAddressType": {
       "value": "Dynamic"
     },
     "newStorageAccountName": {
-      "value": "newcudasacstorage"
+      "value": "bamng3"
     },
     "newStorageAccountType": {
       "value": "Standard_LRS"
