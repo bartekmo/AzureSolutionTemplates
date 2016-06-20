@@ -162,7 +162,7 @@
             },
             "defaultValue": {
               "publicIpAddress": "[concat( basics( 'fwVmName' ), '-pip' )]",
-              "domainNameLabel": "[tolower( basics( 'fwVmName' ))]"
+              "domainNameLabel": "[toLower( basics( 'fwVmName' ))]"
             },
             "options": {
               "hideNone": true,
