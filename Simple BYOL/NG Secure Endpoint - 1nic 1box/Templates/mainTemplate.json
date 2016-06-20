@@ -8,10 +8,10 @@
     "fwVmAddress": {
       "type": "string"
     },
-    "fwVmSize": {
+    "fwVmSize_Standard_LRS": {
       "type": "string"
     },
-    "fwVmSizePremium": {
+    "fwVmSize_Premium_LRS": {
       "type": "string"
     },
     "fwVmRootPasswd": {

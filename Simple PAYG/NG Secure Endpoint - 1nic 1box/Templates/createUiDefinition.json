@@ -187,7 +187,7 @@
         "bladeTitle": "Advanced",
         "elements": [
           {
-            "name": "fwVmSize",
+            "name": "fwVmSizeStandard",
             "type": "Microsoft.Compute.SizeSelector",
             "label": "Virtual firewall instance size",
             "toolTip": "The size of virtual machine to provision.",
@@ -246,7 +246,7 @@
     ],
     "outputs": {
       "fwVmName": "[basics( 'fwVmName' )]",
-      "fwVmSize_Standard_LRS": "[steps( 'AdvancedConfig' ).fwVmSize]",
+      "fwVmSize_Standard_LRS": "[steps( 'AdvancedConfig' ).fwVmSizeStandard]",
       "fwVmSize_Premium_LRS": "[steps( 'AdvancedConfig' ).fwVmSizePremium]",
       "fwVmAddress": "[steps( 'NetworkConfig' ).fwVmAddress]",
       "fwVmRootPasswd": "[basics( 'fwVmRootPasswd' )]",
