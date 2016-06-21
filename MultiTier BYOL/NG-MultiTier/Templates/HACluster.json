@@ -4,34 +4,47 @@
   "parameters": {
     "fwVmName": { "type": "string" },
     "fwVmSize": { "type": "string" },
-    "dependPublicIp": { "type": "string" },
+    "fwVmRootPasswd": { "type": "string" },
+    "publicIpRef": { "type": "string" },
     "imageSku": { "type": "string" },
     "haSetName": { "type": "string" },
     "fwVmAddress1": { "type": "string" },
     "fwVmAddress2": { "type": "string" },
-    "fwSubnetRef": {"type": "string"}
+    "fwSubnetRef": { "type": "string" },
+    "fwSubnetAddress": { "type": "string" },
+    "fwSubnetDefaultGw": { "type": "string" },
+    "lbName": { "type": "string" },
+    "newStorageAccountName": { "type": "string" }
   },
   "variables": {
+    "apiVersion": "2015-06-15",
     "nicName": "[concat( parameters( 'fwVmName' ), 'Nic' )]",
     "location": "[resourceGroup().location]",
     "lbId": "[resourceId('Microsoft.Network/loadBalancers',parameters( 'lbName' ))]",
-    "frontEndIPConfigID": "[concat(variables('lbID'),'/frontendIPConfigurations/LoadBalancerFrontEnd')]"
+    "frontEndIPConfigID": "[concat(variables('lbID'),'/frontendIPConfigurations/LoadBalancerFrontEnd')]",
+    "lbPoolID": "[concat(variables('lbID'),'/backendAddressPools/BackendPool1')]",
+    "lbSSLProbeID": "[concat(variables('lbID'),'/probes/tcpSSLProbe')]",
+    "lbVPNProbeID": "[concat(variables('lbID'),'/probes/tcpVPNProbe')]",
+    "imagePublisher": "barracudanetworks",
+    "imageOffer": "barracuda-ng-firewall",
+    "adminUsername": "will-be-replaced-by-root",
+    "vmStorageAccountContainerName": "vhds"
   },
   "resources": [
     {
-      "apiVersion": "2015-05-01-preview",
+      "apiVersion": "[variables( 'apiVersion' )]",
       "type": "Microsoft.Compute/availabilitySets",
       "name": "[parameters('haSetName')]",
       "location": "[variables('location')]",
       "properties": { }
     },
     {
-      "apiVersion": "2015-05-01-preview",
+      "apiVersion": "[variables( 'apiVersion' )]",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[variables('nicName')]",
       "location": "[variables('location')]",
       "dependsOn": [
-        "[resrouceId('Microsoft.Network/loadBalancers/', parameters('lbName'))]"
+        "[resourceId('Microsoft.Network/loadBalancers/', parameters('lbName'))]"
       ],
       "properties": {
         "ipConfigurations": [
@@ -63,9 +76,9 @@
       }
     },
     {
-      "apiVersion": "2015-05-01-preview",
+      "apiVersion": "[variables( 'apiVersion' )]",
       "type": "Microsoft.Network/networkInterfaces",
-      "name": "[concat(variables('nicName'),'ha')]",
+      "name": "[concat(variables('nicName'),'HA')]",
       "location": "[variables('location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Network/loadBalancers/', parameters('lbName'))]"
@@ -93,12 +106,12 @@
       }
     },
     {
-      "apiVersion": "2015-05-01-preview",
+      "apiVersion": "[variables( 'apiVersion' )]",
       "type": "Microsoft.Network/loadBalancers",
       "name": "[parameters('lbName')]",
       "location": "[variables('location')]",
       "dependsOn": [
-        "[parameters( 'dependPublicIp' )]"
+        "[parameters( 'publicIpRef' )]"
       ],
       "properties": {
         "frontendIPConfigurations": [
@@ -106,7 +119,7 @@
             "name": "LoadBalancerFrontEnd",
             "properties": {
               "publicIPAddress": {
-                "id": "[parameters( 'dependPublicIp' )]"
+                "id": "[parameters( 'publicIpRef' )]"
               }
             }
           }
@@ -224,7 +237,7 @@
       }
     },
     {
-      "apiVersion": "2015-05-01-preview",
+      "apiVersion": "[variables( 'apiVersion' )]",
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[parameters('fwVmName')]",
       "location": "[variables('location')]",
@@ -247,8 +260,8 @@
         "osProfile": {
           "computername": "[parameters('fwVmName')]",
           "adminUsername": "[variables('adminUsername')]",
-          "adminPassword": "[parameters('adminPassword')]",
-          "customData": "[base64(concat('{\"version\" : \"1.0\", \"dha\" : { \"flags\" : [\"primary\"], \"ip\" : \"', variables('ngboxPrimaryIP'), '\", \"haip\" : \"', variables('ngboxSecondaryIP'), '\", \"gateway\" : \"', variables('subnetGatewayAddress'), '\", \"password\" : \"', parameters('adminPassword'), '\" }}'))]"
+          "adminPassword": "[parameters('fwVmRootPasswd')]",
+          "customData": "[base64(concat('{\"version\" : \"1.0\", \"dha\" : { \"flags\" : [\"primary\"], \"ip\" : \"', parameters('fwVmAddress1'), '\", \"haip\" : \"', parameters('fwVmAddress2'), '\", \"gateway\" : \"', parameters('fwSubnetDefaultGw'), '\", \"password\" : \"', parameters('fwVmRootPasswd'), '\" }}'))]"
         },
         "storageProfile": {
           "imageReference": {
@@ -258,11 +271,11 @@
             "version": "latest"
           },
           "osDisk": {
-            "name": "[concat(parameters('firewallVmName'),'-osDisk')]",
+            "name": "[concat(parameters('fwVmName'),'-osDisk')]",
             "caching": "ReadWrite",
             "createOption": "FromImage",
             "vhd": {
-              "uri": "[concat('https://',variables('newStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/',parameters('firewallVmName'),'.vhd')]"
+              "uri": "[concat('https://',parameters('newStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/',parameters('fwVmName'),'.vhd')]"
             }
           }
         },
@@ -276,14 +289,14 @@
       }
     },
     {
-      "apiVersion": "2015-05-01-preview",
+      "apiVersion": "[variables( 'apiVersion' )]",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat(parameters('firewallVmName'),'-HA')]",
+      "name": "[concat(parameters('fwVmName'),'-HA')]",
       "location": "[variables('location')]",
       "dependsOn": [
-        "[concat('Microsoft.Storage/storageAccounts/', variables('newStorageAccountName'))]",
-        "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'), 'ha')]",
-        "[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySetName'))]"
+        "[concat('Microsoft.Storage/storageAccounts/', parameters('newStorageAccountName'))]",
+        "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'), 'HA')]",
+        "[concat('Microsoft.Compute/availabilitySets/', parameters('haSetName'))]"
       ],
       "plan": {
         "name": "[variables('imageSku')]",
@@ -292,16 +305,16 @@
       },
       "properties": {
         "availabilitySet": {
-          "id": "[resourceId('Microsoft.Compute/availabilitySets',variables('availabilitySetName'))]"
+          "id": "[resourceId('Microsoft.Compute/availabilitySets',parameters('haSetName'))]"
         },
         "hardwareProfile": {
-          "vmSize": "[parameters('instanceSize')]"
+          "vmSize": "[parameters('fwVmSize')]"
         },
         "osProfile": {
-          "computername": "[concat(parameters('firewallVmName'),'ha')]",
+          "computername": "[concat(parameters('fwVmName'),'-HA')]",
           "adminUsername": "[variables('adminUsername')]",
-          "adminPassword": "[parameters('adminPassword')]",
-          "customData": "[base64(concat('{\"version\" : \"1.0\", \"dha\" : { \"haip\" : \"', variables('ngboxSecondaryIP'), '\", \"gateway\" : \"', variables('subnetGatewayAddress'), '\", \"password\" : \"', parameters('adminPassword'), '\" }}'))]"
+          "adminPassword": "[parameters('fwVmRootPasswd')]",
+          "customData": "[base64(concat('{\"version\" : \"1.0\", \"dha\" : { \"haip\" : \"', parameters('fwVmAddress1'), '\", \"gateway\" : \"', parameters('fwSubnetDefaultGw'), '\", \"password\" : \"', parameters('fwVmRootPasswd'), '\" }}'))]"
         },
         "storageProfile": {
           "imageReference": {
@@ -311,11 +324,11 @@
             "version": "latest"
           },
           "osDisk": {
-            "name": "[concat(parameters('firewallVmName'),'-osDisk')]",
+            "name": "[concat(parameters('fwVmName'),'-osDisk')]",
             "caching": "ReadWrite",
             "createOption": "FromImage",
             "vhd": {
-              "uri": "[concat('https://',variables('newStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/',parameters('firewallVmName'),'ha','.vhd')]"
+              "uri": "[concat('https://',parameters('newStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/',parameters('fwVmName'),'ha','.vhd')]"
             }
           }
         },
