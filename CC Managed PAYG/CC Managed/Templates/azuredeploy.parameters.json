@@ -55,6 +55,9 @@
     },
       "fwVmSize_Standard_LRS": {
           "value": "Standard_A1"
+      },
+      "ccUsername": {
+          "value": "root"
       }
   }
 }

@@ -206,10 +206,22 @@
             }
           },
           {
-            "name": "ccSecret",
+            "name": "ccUsername",
             "type": "Microsoft.Common.TextBox",
-            "label": "PAR file retrieval key",
-            "toolTip": "PAR file retrieval shared key from Box Properties > Operational settings",
+            "label": "NextGen Control Center admin username",
+            "toolTip": "Provide username for logging into NGCC",
+            "constraints": {
+              "required": true
+            },
+            "options": {
+              "hideConfirmation": true
+            }
+          },
+          {
+            "name": "ccPassword",
+            "type": "Microsoft.Common.PassBox",
+            "label": "NextGen Control Center admin password",
+            "toolTip": "Provide password for logging into NGCC",
             "constraints": {
               "required": true
             },
@@ -304,7 +316,8 @@
       "ccIpAddress": "[steps( 'CCConfig' ).ccIpAddress]",
       "ccClusterName": "[steps( 'CCConfig' ).ccClusterName]",
       "ccRangeId": "[steps( 'CCConfig' ).ccRangeId]",
-      "ccSecret": "[steps( 'CCConfig' ).ccSecret]"
+      "ccUsername": "[steps( 'CCConfig' ).ccUsername]",
+      "ccPassword": "[steps( ''CCConfig' ).ccPassword]"
     }
   }
 
