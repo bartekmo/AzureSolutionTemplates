@@ -50,9 +50,6 @@
     "ccRangeId": {
       "value": "1"
     },
-    "ccSecret": {
-      "value": "asdasd"
-    },
       "fwVmSize_Standard_LRS": {
           "value": "Standard_A1"
       },
