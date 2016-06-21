@@ -33,9 +33,6 @@
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[parameters('Nic1Name')]",
       "location": "[resourceGroup().location]",
-      "dependsOn": [
-        "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIpName'))]"
-      ],
       "properties": {
         "ipConfigurations": [
           {
