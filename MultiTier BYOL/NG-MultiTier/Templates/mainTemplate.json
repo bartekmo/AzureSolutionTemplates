@@ -156,7 +156,8 @@
       "type": "Microsoft.Resources/deployments",
       "dependsOn": [
         "[variables( 'vnetId' )]",
-        "[variables( 'storageId' )]"
+        "[variables( 'storageId' )]",
+        "[variables( 'publicIpRef' )]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -170,7 +171,7 @@
           },
           "lbName": {
             "value": "[parameters( 'lbName' )]"
-          }
+          },
           "fwVmName": {
             "value": "[parameters( 'fwVmName' )]"
           },

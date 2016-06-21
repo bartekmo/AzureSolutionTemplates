@@ -110,9 +110,7 @@
       "type": "Microsoft.Network/loadBalancers",
       "name": "[parameters('lbName')]",
       "location": "[variables('location')]",
-      "dependsOn": [
-        "[parameters( 'publicIpRef' )]"
-      ],
+      "dependsOn": [ ],
       "properties": {
         "frontendIPConfigurations": [
           {
