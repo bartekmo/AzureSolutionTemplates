@@ -66,20 +66,22 @@
       "type": "Microsoft.Resources/deployments",
       "properties": {
         "mode": "Incremental",
-        "templateLink": "[variables( 'deployPublicIpUri' )]",
-        "contentVersion": "1.0.0.0",
+        "templateLink": {
+          "uri": "[variables( 'deployPublicIpUri' )]",
+          "contentVersion": "1.0.0.0"
+        },
         "parameters": {
-          "publicIpName": {
-            "value": "[parameters( 'publicIpName' )]"
-          },
-          "publicIpDnsName": {
-            "value": "[parameters( 'publicIpDnsName' )]"
-          },
-          "publicIpAddressType": {
-            "value": "[parameters( 'publicIpAddressType' )]"
+            "publicIpName": {
+              "value": "[parameters( 'publicIpName' )]"
+            },
+            "publicIpDnsName": {
+              "value": "[parameters( 'publicIpDnsName' )]"
+            },
+            "publicIpAddressType": {
+              "value": "[parameters( 'publicIpAddressType' )]"
+            }
           }
         }
-      }
     },
     {
       "type": "Microsoft.Network/routeTables",
