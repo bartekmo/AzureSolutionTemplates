@@ -168,6 +168,9 @@
           "haSetName": {
             "value": "[parameters( 'haSetName' )]"
           },
+          "lbName": {
+            "value": "[parameters( 'lbName' )]"
+          }
           "fwVmName": {
             "value": "[parameters( 'fwVmName' )]"
           },

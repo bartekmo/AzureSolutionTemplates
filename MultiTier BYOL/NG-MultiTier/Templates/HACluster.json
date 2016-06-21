@@ -299,7 +299,7 @@
         "[concat('Microsoft.Compute/availabilitySets/', parameters('haSetName'))]"
       ],
       "plan": {
-        "name": "[variables('imageSku')]",
+        "name": "[parameters('imageSku')]",
         "Product": "[variables('imageOffer')]",
         "Publisher": "[variables('imagePublisher')]"
       },
