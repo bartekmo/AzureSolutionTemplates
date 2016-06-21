@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
   "parameters": {
     "fwVmName": {
-      "value": "bam-ng1"
+      "value": "bam-ng3"
     },
     "fwVmSize_Premium_LRS": {
       "value": "Standard_DS1"
@@ -18,25 +18,25 @@
       "value": "10.15.0.0/29"
     },
     "publicIpName": {
-      "value": "bam-ng1-pip"
+      "value": "bam-ng3-pip"
     },
     "publicIpDnsName": {
-      "value": "bam-ng1"
+      "value": "bam-ng3"
     },
     "publicIpAddressType": {
       "value": "Dynamic"
     },
     "publicIpNewOrNone": {
-      "value": "new"
+      "value": "none"
     },
     "newStorageAccountName": {
-      "value": "bamng1"
+      "value": "bamng3"
     },
     "newStorageAccountType": {
       "value": "Premium_LRS"
     },
     "vnetName": {
-      "value": "newVirtualNetwork"
+      "value": "bam-ng3-vnet"
     },
     "vnetAddressSpace": {
       "value": "10.15.0.0/16"
@@ -52,6 +52,9 @@
     },
     "ccSecret": {
       "value": "asdasd"
-    }
+    },
+      "fwVmSize_Standard_LRS": {
+          "value": "x"
+      }
   }
 }

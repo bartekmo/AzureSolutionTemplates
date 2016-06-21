@@ -3,37 +3,43 @@
     "contentVersion": "1.0.0.0",
   "parameters": {
     "fwVmName": {
-      "value": "bam-ng2"
+      "value": "bam-ng3"
     },
-    "fwVmSize": {
-      "value": "Standard_A1"
+    "fwVmSize_Premium_LRS": {
+      "value": "Standard_DS1"
     },
     "fwVmAddress": {
-      "value": "10.0.1.11"
+      "value": "10.15.0.4"
     },
     "fwSubnetName": {
       "value": "FirewallSubnet"
     },
     "fwSubnetAddress": {
-      "value": "10.0.1.0/24"
+      "value": "10.15.0.0/29"
+    },
+    "publicIpName": {
+      "value": "bam-ng3-pip"
     },
     "publicIpDnsName": {
-      "value": "bam-ng2"
+      "value": "bam-ng3"
     },
     "publicIpAddressType": {
       "value": "Dynamic"
     },
+    "publicIpNewOrNone": {
+      "value": "none"
+    },
     "newStorageAccountName": {
-      "value": "bamng2"
+      "value": "bamng3"
     },
     "newStorageAccountType": {
-      "value": "Standard_LRS"
+      "value": "Premium_LRS"
     },
     "vnetName": {
-      "value": "bam-ng2-vnet"
+      "value": "bam-ng3-vnet"
     },
     "vnetAddressSpace": {
-      "value": "10.0.0.0/16"
+      "value": "10.15.0.0/16"
     },
     "ccIpAddress": {
       "value": "104.47.142.121"
@@ -45,10 +51,10 @@
       "value": "1"
     },
     "ccSecret": {
-      "value": "alamakota"
+      "value": "asdasd"
     },
-      "publicIpName": {
-          "value": "bam-ng2-pip"
+      "fwVmSize_Standard_LRS": {
+          "value": "x"
       }
   }
 }
