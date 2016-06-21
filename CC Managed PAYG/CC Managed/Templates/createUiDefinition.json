@@ -246,7 +246,7 @@
             "imageReference": {
               "publisher": "barracudanetworks",
               "offer": "barracuda-ng-firewall",
-              "sku": "byol"
+              "sku": "hourly"
             },
             "count": "1",
             "visible": "[equals( steps( 'DeployConfig' ).storageAccount.type, 'Standard_LRS' )]"
@@ -277,7 +277,7 @@
             "imageReference": {
               "publisher": "barracudanetworks",
               "offer": "barracuda-ng-firewall",
-              "sku": "hourly"
+              "sku": "byol"
             },
             "count": "1",
             "visible": "[equals( steps( 'DeployConfig' ).storageAccount.type, 'Premium_LRS' )]"

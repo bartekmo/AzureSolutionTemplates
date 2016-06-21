@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "CC Managed", "CC Managed\CC Managed.deployproj", "{277310FC-56C0-49F6-8C12-1C98CBBA0FF7}"
+Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "CC Managed PAYG", "CC Managed\CC Managed PAYG.deployproj", "{277310FC-56C0-49F6-8C12-1C98CBBA0FF7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
