@@ -48,13 +48,12 @@
     "fwSubnetDefaultGw": "[concat( variables( 'fwSubnetAddrSplit' )[0], '.', variables( 'fwSubnetAddrSplit' )[1], '.', variables( 'fwSubnetAddrSplit' )[2], '.', add( int( variables( 'fwSubnetAddrSplit' )[3]), 1 ))]",
     "artifactsUriBase": "https://raw.githubusercontent.com/bartekmo/AzureSolutionTemplates/master/MultiTier%20BYOL/NG-MultiTier/Templates/",
     "deployByCountUri": "[concat( variables( 'artifactsUriBase' ), parameters( 'fwVmCount' ), '.json' )]",
-    "deployPublicIpUri": "[concat( variables( 'artifactsUriBase' ), '/publicIp-', parameters( 'publicIpNewOrNone' ), '.json' )]"
+    "deployPublicIpUri": "[concat( variables( 'artifactsUriBase' ), 'publicIp-', parameters( 'publicIpNewOrNone' ), '.json' )]"
   },
   "resources": [
     {
       "type": "Microsoft.Storage/storageAccounts",
       "name": "[parameters('newStorageAccountName')]",
-      "displayName": "Storage Account",
       "apiVersion": "[variables( 'apiVersion' )]",
       "location": "[variables('location')]",
       "properties": {
@@ -68,24 +67,24 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": "[variables( 'deployPublicIpUri' )]",
-        "contentVersion": "1.0.0.0"
-      },
-      "parameters": {
-        "publicIpName": {
-          "value": "[parameters( 'publicIpName' )]"
-        },
-        "publicIpDnsName": {
-          "value": "[parameters( 'publicIpDnsName' )]"
-        },
-        "publicIpAddressType": {
-          "value": "[parameters( 'publicIpAddressType' )]"
+        "contentVersion": "1.0.0.0",
+        "parameters": {
+          "publicIpName": {
+            "value": "[parameters( 'publicIpName' )]"
+          },
+          "publicIpDnsName": {
+            "value": "[parameters( 'publicIpDnsName' )]"
+          },
+          "publicIpAddressType": {
+            "value": "[parameters( 'publicIpAddressType' )]"
+          }
         }
       }
     },
     {
       "type": "Microsoft.Network/routeTables",
       "name": "[variables('routeTableName')]",
-      "displayName": "Routing Table",
+      "apiVersion": "[variables( 'apiVersion' )]",
       "location": "[variables('location')]",
       "properties": {
         "routes": [
@@ -103,6 +102,7 @@
     {
       "type": "Microsoft.Network/virtualNetworks",
       "name": "[parameters('vnetName')]",
+      "apiVersion": "[variables( 'apiVersion' )]",
       "location": "[variables('location')]",
       "dependsOn": [ "[concat('Microsoft.Network/routeTables/', variables('routeTableName'))]" ],
       "properties": {
@@ -130,7 +130,7 @@
           {
             "name": "[parameters( 'tier2SubnetName' )]",
             "properties": {
-              "addressPrefix": "[[parameters( 'tier2SubnetAddress' )]",
+              "addressPrefix": "[parameters( 'tier2SubnetAddress' )]",
               "routeTable": {
                 "id": "[resourceId('Microsoft.Network/routeTables', variables('routeTableName'))]"
               }
@@ -203,7 +203,6 @@
       }
 
     }
-
 
   ]
 }
