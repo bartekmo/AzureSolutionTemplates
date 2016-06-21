@@ -292,7 +292,6 @@
       "name": "[concat(parameters('fwVmName'),'-HA')]",
       "location": "[variables('location')]",
       "dependsOn": [
-        "[concat('Microsoft.Storage/storageAccounts/', parameters('newStorageAccountName'))]",
         "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'), 'HA')]",
         "[concat('Microsoft.Compute/availabilitySets/', parameters('haSetName'))]"
       ],
