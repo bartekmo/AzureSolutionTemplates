@@ -317,7 +317,7 @@
       "ccClusterName": "[steps( 'CCConfig' ).ccClusterName]",
       "ccRangeId": "[steps( 'CCConfig' ).ccRangeId]",
       "ccUsername": "[steps( 'CCConfig' ).ccUsername]",
-      "ccPassword": "[steps( ''CCConfig' ).ccPassword]"
+      "ccPassword": "[steps( 'CCConfig' ).ccPassword]"
     }
   }
 
