@@ -37,10 +37,6 @@
               "required": true,
               "allowedValues": [
                 {
-                  "label": "Small (Level 2)",
-                  "value": "1"
-                },
-                {
                   "label": "Medium (Level 4)",
                   "value": "2"
                 },
