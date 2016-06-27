@@ -219,7 +219,7 @@
           },
           {
             "name": "ccPassword",
-            "type": "Microsoft.Common.PassBox",
+            "type": "Microsoft.Common.PasswordBox",
             "label": "NextGen Control Center admin password",
             "toolTip": "Provide password for logging into NGCC",
             "constraints": {
