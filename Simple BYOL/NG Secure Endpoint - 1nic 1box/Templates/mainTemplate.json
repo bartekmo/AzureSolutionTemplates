@@ -206,7 +206,7 @@
           "computerName": "[parameters('fwVmName')]",
           "adminUsername": "will-be-replaced-by-root",
           "adminPassword": "[parameters('fwVmRootPasswd')]",
-          "customData": "[base64(concat('#!/bin/bash\n\n', '/opt/phion/bin/cloud-setmip ', parameters('fwVmAddress'), ' ', variables( 'fwSubnetMask' ), ' ', variables( 'fwSubnetDefaultGw' ), ' >> /tmp/setmip.log'))]"
+          "customData": "[base64(concat('#!/bin/bash\n\n', '/opt/phion/bin/editconf -f /opt/phion/config/configroot/boxnet.conf -d REFS -s gendev_eth0\n', '/opt/phion/bin/editconf -f /opt/phion/config/configroot/boxnet.conf -d RENAMED -s gendev_eth0\n', '/opt/phion/bin/cloud-setmip ', parameters('fwVmAddress'), ' ', variables( 'fwSubnetMask' ), ' ', variables( 'fwSubnetDefaultGw' ), ' >> /tmp/setmip.log'))]"
         }
       }
     }
