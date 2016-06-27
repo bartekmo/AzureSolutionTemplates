@@ -7,8 +7,8 @@
         "name": "fwVmName",
         "type": "Microsoft.Common.TextBox",
         "label": "Firewall Instance Host Name",
-        "toolTip": "Provide host name for newly created instance of Barracuda NextGen Firewall F",
-        "defaultValue": "BarracudaNGFW",
+        "toolTip": "Provide host name for newly created instance of Barracuda NextGen Firewall F (must be the name of the box in the Control Center)",
+        "defaultValue": "",
         "constraints": {
           "required": true,
           "regex": "^[A-Za-z0-9-_]{1,15}$",
