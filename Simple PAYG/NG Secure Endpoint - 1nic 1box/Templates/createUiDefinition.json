@@ -212,8 +212,8 @@
           {
             "name": "fwVmSizePremium",
             "type": "Microsoft.Compute.SizeSelector",
-            "label": "Virtual firewall instance size",
-            "toolTip": "The size of virtual machine to provision.",
+            "label": "Firewall VM size",
+            "toolTip": "Select the VM size and type.",
             "recommendedSizes": [
               "[concat( 'Standard_DS', steps( 'DeployConfig' ).fwVmSizeBasic )]",
               "[concat( 'Standard_DS', steps( 'DeployConfig' ).fwVmSizeBasic, '_v2' )]"

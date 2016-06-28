@@ -254,8 +254,8 @@
           {
             "name": "fwVmSizePremium",
             "type": "Microsoft.Compute.SizeSelector",
-            "label": "Virtual firewall instance size",
-            "toolTip": "The size of virtual machine to provision.",
+            "label": "Firewall VM size",
+            "toolTip": "Select the VM size. The number of CPU cores must match your license.",
             "recommendedSizes": [
               "[concat( 'Standard_DS', steps( 'DeployConfig' ).fwVmSizeBasic )]",
               "[concat( 'Standard_DS', steps( 'DeployConfig' ).fwVmSizeBasic, '_v2' )]"
