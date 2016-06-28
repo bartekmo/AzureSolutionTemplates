@@ -98,7 +98,7 @@
             },
             "toolTip": {
               "virtualNetwork": "Virtual Network Name",
-              "subnets": "The firwall subnet's address range in CIDR notation. The subnet must be in address space of the virtual network."
+              "subnets": "Create a dedicated subnet for the F-Series Firewall VM."
             },
             "defaultValue": {
               "name": "newVirtualNetwork",
