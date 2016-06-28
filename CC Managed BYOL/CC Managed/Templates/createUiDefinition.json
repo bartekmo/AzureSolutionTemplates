@@ -6,8 +6,8 @@
       {
         "name": "fwVmName",
         "type": "Microsoft.Common.TextBox",
-        "label": "Firewall Instance Host Name",
-        "toolTip": "Provide host name for newly created instance of Barracuda NextGen Firewall F (must be the name of the box in the Control Center)",
+        "label": "Firewall name",
+        "toolTip": "Enter the name for the new NextGen Firewall F VM.",
         "defaultValue": "",
         "constraints": {
           "required": true,
@@ -30,8 +30,8 @@
           {
             "name": "fwVmSizeBasic",
             "type": "Microsoft.Common.DropDown",
-            "label": "Firewall Instance Size",
-            "toolTip": "Choose instance size corresponding to your license",
+            "label": "Firewall size",
+            "toolTip": "Select the firewall size matching the purchased license.",
             "defaultValue": "2",
             "constraints": {
               "required": true,
@@ -60,7 +60,7 @@
             "name": "storageAccount",
             "type": "Microsoft.Storage.StorageAccountSelector",
             "label": "Storage Account",
-            "toolTip": "Storage Account for the disk drive of the Barracuda NextGen Firewall",
+            "toolTip": "Select the storage account for the OS disk of the F-Series Firewall VM.",
             "defaultValue": {
               "type": "Standard_LRS"
             },
@@ -84,7 +84,7 @@
             },
             "toolTip": {
               "virtualNetwork": "Virtual Network Name",
-              "subnets": "Create a separate subnet for Barracuda NGFW"
+              "subnets": "Create a dedicated subnet for the F-Series Firewall VM."
             },
             "defaultValue": {
               "name": "newVirtualNetwork",
@@ -98,7 +98,7 @@
             },
             "subnets": {
               "fwSubnet": {
-                "label": "Firewall Subnet",
+                "label": "Firewall subnet",
                 "defaultValue": {
                   "name": "FirewallSubnet",
                   "addressPrefixSize": "/29"
@@ -126,8 +126,8 @@
           {
             "name": "fwVmAddress",
             "type": "Microsoft.Common.TextBox",
-            "label": "Barracuda NextGen Firewall Private IP Address",
-            "toolTip": "Provide IP address from Firewall Subnet defined above",
+            "label": "Firewall static private IP address",
+            "toolTip": "Enter an IP address from the firewall subnet.",
             "defaultValue": "[steps( 'DeployConfig' ).virtualNetwork.subnets.fwSubnet.startAddress]",
             "constraints": {
               "required": false,
@@ -139,11 +139,11 @@
             "name": "publicIp",
             "type": "Microsoft.Network.PublicIpAddressCombo",
             "label": {
-              "publicIpAddress": "Public IP Address Name",
-              "domainNameLabel": "Domain Name Label"
+              "publicIpAddress": "Public IP address name",
+              "domainNameLabel": "Domain name label"
             },
             "toolTip": {
-              "publicIpAddress": "Name of public IP address ARM resource",
+              "publicIpAddress": "Enter the name of the public IP address used for the firewall VM.",
               "domainNameLabel": "Prefix to use for public IP address DNS name (e.g. [prefix].region.cloudapp.azure.com)"
             },
             "defaultValue": {
@@ -175,8 +175,8 @@
           {
             "name": "ccIpAddress",
             "type": "Microsoft.Common.TextBox",
-            "label": "IP Address of Control Center",
-            "toolTip": "Publicly reachable IP address of Control Center",
+            "label": "IP address for NextGen Control Center",
+            "toolTip": "The new firewall VM connects to this public IP address on TCP port 807 to retrieve the configuration from the Control Center.",
             "constraints": {
               "required": true,
               "regex": "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])$",
@@ -186,8 +186,8 @@
           {
             "name": "ccRangeId",
             "type": "Microsoft.Common.TextBox",
-            "label": "Range ID for firewall box",
-            "toolTip": "ID number of NGCC range hosting deployed NGFW instance configuration",
+            "label": "Control Center range number",
+            "toolTip": "Enter the range number the configuration for the new firewall is located in.",
             "constraints": {
               "required": true,
               "regex": "^[0-9]{1,2}$",
@@ -197,8 +197,8 @@
           {
             "name": "ccClusterName",
             "type": "Microsoft.Common.TextBox",
-            "label": "Cluster name for firewall box",
-            "toolTip": "Name of cluster hosting deployed NGFW instance configuration",
+            "label": "Control Center cluster name",
+            "toolTip": "Enter the cluster name the configuration for the new firewall is in.",
             "constraints": {
               "required": true,
               "regex": "^[a-zA-Z0-9-]{1,16}$",
@@ -208,8 +208,8 @@
           {
             "name": "ccSecret",
             "type": "Microsoft.Common.TextBox",
-            "label": "PAR file retrieval key",
-            "toolTip": "PAR file retrieval shared key from Box Properties > Operational settings",
+            "label": "Shared key",
+            "toolTip": "Enter the shared secrect configured as the PAR file retrieval key on the Control Center.",
             "constraints": {
               "required": true
             },
@@ -231,8 +231,8 @@
           {
             "name": "fwVmSizeStandard",
             "type": "Microsoft.Compute.SizeSelector",
-            "label": "Virtual firewall instance size",
-            "toolTip": "The size of virtual machine to provision.",
+            "label": "Firewall VM size",
+            "toolTip": "Select the VM size. The number of CPU cores must match your license.",
             "recommendedSizes": [
               "[concat( 'Standard_D', steps( 'DeployConfig' ).fwVmSizeBasic )]",
               "[concat( 'Standard_A', steps( 'DeployConfig' ).fwVmSizeBasic )]",
