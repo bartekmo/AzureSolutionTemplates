@@ -88,7 +88,7 @@
             },
             "defaultValue": {
               "name": "newVirtualNetwork",
-              "addressPrefixSize": "/16"
+              "addressPrefixSize": "/24"
             },
             "constraints": {
               "minAddressPrefixSize": "/24"

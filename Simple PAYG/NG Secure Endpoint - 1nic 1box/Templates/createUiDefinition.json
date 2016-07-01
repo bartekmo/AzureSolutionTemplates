@@ -22,7 +22,7 @@
         "toolTip": "Enter the root password used to log in via NextGen Admin and SSH.",
         "constraints": {
           "required": true,
-          "regex": "^(?:(?=.*[a-z])(?:(?=.*[A-Z])(?=.*[\\d\\W])|(?=.*\\W)(?=.*\\d))|(?=.*\\W)(?=.*[A-Z])(?=.*\\d)).{6,72}$",
+          "regex": "^(?:(?=.*[a-z])(?:(?=.*[A-Z])(?=.*[\\d\\W])|(?=.*\\W)(?=.*\\d))|(?=.*\\W)(?=.*[A-Z])(?=.*\\d)).{12,72}$",
           "validationMessage": "Your root password should be at least 6 characters long"
         },
         "options": {
@@ -102,7 +102,7 @@
             },
             "defaultValue": {
               "name": "newVirtualNetwork",
-              "addressPrefixSize": "/16"
+              "addressPrefixSize": "/24"
             },
             "constraints": {
               "minAddressPrefixSize": "/24"
