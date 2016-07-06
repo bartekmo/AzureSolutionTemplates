@@ -26,11 +26,12 @@
     "vnetAddressSpace": { "type": "string" },
     "lbName": { "type": "string" },
     "haSetName": { "type": "string" },
-    "fwVmCount": { "type": "string" }
+    "fwVmCount": { "type": "string" },
+    "location": { "type": "string" }
   },
   "variables": {
     "imageSku": "byol",
-    "location": "[resourceGroup().location]",
+    "location": "[parameters( 'location' )]",
     "fwVmSize": "[parameters( concat( 'fwVmSize_', parameters( 'newStorageAccountType' )))]",
     "nicName": "[concat( 'ngfNIC-', replace(resourceGroup().name, '-', ''))]",
     "adminUsername": "will_be_replaced_by_root",
@@ -39,6 +40,7 @@
     "storageId": "[resourceId( 'Microsoft.Storage/storageAccounts', parameters( 'newStorageAccountName' ))]",
     "subnet1Ref": "[concat(variables('vnetID'),'/subnets/',parameters( 'fwSubnetName' ))]",
     "publicIpRef": "[resourceId( 'Microsoft.Network/publicIPAddresses', parameters( 'publicIPName' ))]",
+    "publicIpDependency": "[resourceId( 'Microsoft.Resources/deployments', 'publicIp' )]",
     "routeTableName": "[concat('default-via-', replace(parameters('fwVmName'), '-', ''))]",
     "apiVersion": "2015-06-15",
     "fwSubnetSplit": "[split( parameters( 'fwSubnetAddress' ), '/' )]",
@@ -71,17 +73,17 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-            "publicIpName": {
-              "value": "[parameters( 'publicIpName' )]"
-            },
-            "publicIpDnsName": {
-              "value": "[parameters( 'publicIpDnsName' )]"
-            },
-            "publicIpAddressType": {
-              "value": "[parameters( 'publicIpAddressType' )]"
-            }
+          "publicIpName": {
+            "value": "[parameters( 'publicIpName' )]"
+          },
+          "publicIpDnsName": {
+            "value": "[parameters( 'publicIpDnsName' )]"
+          },
+          "publicIpAddressType": {
+            "value": "[parameters( 'publicIpAddressType' )]"
           }
         }
+      }
     },
     {
       "type": "Microsoft.Network/routeTables",
@@ -157,7 +159,7 @@
       "dependsOn": [
         "[variables( 'vnetId' )]",
         "[variables( 'storageId' )]",
-        "[variables( 'publicIpRef' )]"
+        "[variables( 'publicIpDependency' )]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -204,11 +206,20 @@
           },
           "newStorageAccountName": {
             "value": "[parameters( 'newStorageAccountName' )]"
+          },
+          "location": {
+            "value": "[parameters( 'location' )]"
           }
         }
       }
 
     }
+  ],
+  "outputs": {
+    "publicIpDomainAddress": {
+      "type": "string",
+      "value": "[concat( parameters( 'publicIpDnsName' ), '.', parameters( 'location' ), '.cloudapp.azure.com' )]"
+    }
 
-  ]
+  }
 }

@@ -14,12 +14,13 @@
     "fwSubnetAddress": { "type": "string" },
     "fwSubnetDefaultGw": { "type": "string" },
     "lbName": { "type": "string" },
-    "newStorageAccountName": { "type": "string" }
+    "newStorageAccountName": { "type": "string" },
+    "location": { "type": "string" }
   },
   "variables": {
     "apiVersion": "2015-06-15",
+    "networkApiVersion": "2016-06-01",
     "nicName": "[concat( parameters( 'fwVmName' ), 'Nic' )]",
-    "location": "[resourceGroup().location]",
     "lbId": "[resourceId('Microsoft.Network/loadBalancers',parameters( 'lbName' ))]",
     "frontEndIPConfigID": "[concat(variables('lbID'),'/frontendIPConfigurations/LoadBalancerFrontEnd')]",
     "lbPoolID": "[concat(variables('lbID'),'/backendAddressPools/BackendPool1')]",
@@ -35,11 +36,11 @@
       "apiVersion": "[variables( 'apiVersion' )]",
       "type": "Microsoft.Compute/availabilitySets",
       "name": "[parameters('haSetName')]",
-      "location": "[variables('location')]",
+      "location": "[parameters('location')]",
       "properties": { }
     },
     {
-      "apiVersion": "[variables( 'apiVersion' )]",
+      "networkApiVersion": "[variables( 'apiVersion' )]",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[variables('nicName')]",
       "location": "[variables('location')]",
@@ -76,7 +77,7 @@
       }
     },
     {
-      "apiVersion": "[variables( 'apiVersion' )]",
+      "networkApiVersion": "[variables( 'apiVersion' )]",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[concat(variables('nicName'),'HA')]",
       "location": "[variables('location')]",
@@ -238,7 +239,7 @@
       "apiVersion": "[variables( 'apiVersion' )]",
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[parameters('fwVmName')]",
-      "location": "[variables('location')]",
+      "location": "[parameters('location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Network/networkInterfaces/', variables('nicName'))]",
         "[resourceId('Microsoft.Compute/availabilitySets/', parameters('haSetName'))]"
@@ -289,11 +290,11 @@
     {
       "apiVersion": "[variables( 'apiVersion' )]",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat(parameters('fwVmName'),'-HA')]",
-      "location": "[variables('location')]",
+      "name": "[concat( parameters('fwVmName'), '-HA' )]",
+      "location": "[parameters('location')]",
       "dependsOn": [
-        "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'), 'HA')]",
-        "[concat('Microsoft.Compute/availabilitySets/', parameters('haSetName'))]"
+        "[resourceId( 'Microsoft.Network/networkInterfaces', variables( 'nicName' ), 'HA')]",
+        "[resourceId( 'Microsoft.COmpute/virtualMachines', parameters( 'fwVmName' ) )]"
       ],
       "plan": {
         "name": "[parameters('imageSku')]",

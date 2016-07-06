@@ -75,7 +75,7 @@
       "value": "HACluster"
     },
       "fwVmSize_Premium_LRS": {
-          "value": "Premium_DS1"
+          "value": "Standard_DS1"
       }
   }
 }
