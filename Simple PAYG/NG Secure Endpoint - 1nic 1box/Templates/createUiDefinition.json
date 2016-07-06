@@ -23,7 +23,7 @@
         "constraints": {
           "required": true,
           "regex": "^(?:(?=.*[a-z])(?:(?=.*[A-Z])(?=.*[\\d\\W])|(?=.*\\W)(?=.*\\d))|(?=.*\\W)(?=.*[A-Z])(?=.*\\d)).{12,72}$",
-          "validationMessage": "Your root password should be at least 6 characters long"
+          "validationMessage": "Your root password should be at least 12 characters long and have at least 3 of the following: 1 lower case character, 1 upper case character, 1 number and 1 special character"
         },
         "options": {
           "hideConfirmation": true
@@ -141,12 +141,12 @@
             "name": "fwVmAddress",
             "type": "Microsoft.Common.TextBox",
             "label": "Firewall static private IP address",
-            "toolTip": "Enter an IP address from the firewall subnet.",
+            "toolTip": "[concat( 'Enter an IP address from the firewall subnet (', steps( 'DeployConfig' ).virtualNetwork.subnets.fwSubnet.addressPrefix, ')' )]",
             "defaultValue": "[steps( 'DeployConfig' ).virtualNetwork.subnets.fwSubnet.startAddress]",
             "constraints": {
               "required": false,
               "regex": "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])$",
-              "validationMessage": "Must be a valid IPv4 address from Firewall Subnet"
+              "validationMessage": "[concat( 'Must be a valid IPv4 address from Firewall Subnet (', steps( 'DeployConfig' ).virtualNetwork.subnets.fwSubnet.addressPrefix, ')' )]"
             }
           },
           {
@@ -170,7 +170,9 @@
               "hideExisting": true
             },
             "constraints": {
-              "required": false
+              "required": {
+                "domainNameLabel": true
+              }
             },
             "visible": true
           }
@@ -258,7 +260,8 @@
       "newStorageAccountName": "[steps( 'DeployConfig' ).storageAccount.name]",
       "newStorageAccountType": "[steps( 'DeployConfig' ).storageAccount.type]",
       "vnetName": "[steps( 'DeployConfig' ).virtualNetwork.name]",
-      "vnetAddressSpace": "[steps( 'DeployConfig').virtualNetwork.addressPrefix]"
+      "vnetAddressSpace": "[steps( 'DeployConfig').virtualNetwork.addressPrefix]",
+      "location": "[location()]"
     }
   }
 

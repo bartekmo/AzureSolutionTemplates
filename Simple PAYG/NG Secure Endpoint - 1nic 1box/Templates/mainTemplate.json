@@ -45,6 +45,9 @@
     },
     "vnetAddressSpace": {
       "type": "string"
+    },
+    "location": {
+      "type": "string"
     }
 
 
@@ -72,7 +75,7 @@
       "apiVersion": "[variables( 'apiVersion' )]",
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "[parameters('publicIPName')]",
-      "location": "[resourceGroup().location]",
+      "location": "[parameters( 'location' )]",
       "properties": {
         "publicIPAllocationMethod": "[parameters('publicIpAddressType')]",
         "dnsSettings": {
@@ -84,7 +87,7 @@
       "apiVersion": "[variables( 'apiVersion' )]",
       "type": "Microsoft.Storage/storageAccounts",
       "name": "[parameters('newStorageAccountName')]",
-      "location": "[resourceGroup().location]",
+      "location": "[parameters( 'location' )]",
       "properties": {
         "accountType": "[parameters('newStorageAccountType')]"
       }
@@ -93,7 +96,7 @@
       "apiVersion": "[variables( 'apiVersion' )]",
       "type": "Microsoft.Network/routeTables",
       "name": "[variables('defaultRouteTableName')]",
-      "location": "[resourceGroup().location]",
+      "location": "[parameters( 'location' )]",
       "properties": {
         "routes": [
           {
@@ -111,9 +114,10 @@
       "apiVersion": "[variables( 'apiVersion' )]",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[variables('Nic1Name')]",
-      "location": "[resourceGroup().location]",
+      "location": "[parameters( 'location' )]",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIpName'))]"
+        "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIpName'))]",
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters( 'vnetName' ))]"
       ],
         "properties"
         :
@@ -141,7 +145,7 @@
       "apiVersion": "[variables( 'apiVersion' )]",
       "type": "Microsoft.Network/virtualNetworks",
       "name": "[parameters('vnetName')]",
-      "location": "[resourceGroup().location]",
+      "location": "[parameters( 'location' )]",
       "properties": {
         "addressSpace": {
           "addressPrefixes": [
@@ -162,7 +166,7 @@
       "apiVersion": "[variables( 'apiVersion' )]",
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[parameters('fwVmName')]",
-      "location": "[resourceGroup().location]",
+      "location": "[parameters( 'location' )]",
       "dependsOn": [
         "[resourceId( 'Microsoft.Network/networkInterfaces', variables('Nic1Name') )]",
         "[resourceId( 'Microsoft.Storage/storageAccounts', parameters( 'newStorageAccountName' ))]"
@@ -216,7 +220,7 @@
   "outputs": {
     "publicIpDomainAddress": {
       "type": "string",
-      "value": "[concat( parameters( 'publicIpDnsName' ), '.', resourceGroup().location, '.cloudapp.azure.com' )]"
+      "value": "[concat( parameters( 'publicIpDnsName' ), '.', parameters( 'location' ), '.cloudapp.azure.com' )]"
     }
   }
 }

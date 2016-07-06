@@ -1,6 +1,48 @@
 ﻿{
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {
+  "parameters": {
+    "fwVmName": {
+      "value": "BarracudaNGFW"
+    },
+    "fwVmSize_Standard_LRS": {
+      "value": "Standard_D2"
+    },
+    "fwVmAddress": {
+      "value": "10.19.0.4"
+    },
+    "fwVmRootPasswd": {
+      "value": "asdasdasd12."
+    },
+    "fwSubnetName": {
+      "value": "FirewallSubnet"
+    },
+    "fwSubnetAddress": {
+      "value": "10.19.0.0/29"
+    },
+    "publicIpName": {
+      "value": "testPIP01"
+    },
+    "publicIpDnsName": {
+      "value": "cudatestpip01"
+    },
+    "publicIpAddressType": {
+      "value": "Dynamic"
+    },
+    "newStorageAccountName": {
+      "value": "cudangteststorage01"
+    },
+    "newStorageAccountType": {
+      "value": "Standard_LRS"
+    },
+    "vnetName": {
+      "value": "newVirtualNetwork"
+    },
+    "vnetAddressSpace": {
+      "value": "10.19.0.0/24"
+    },
+    "location": {
+      "value": "brazilsouth"
     }
+  }
 }
