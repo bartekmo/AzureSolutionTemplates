@@ -3,58 +3,61 @@
     "contentVersion": "1.0.0.0",
   "parameters": {
     "fwVmName": {
-      "value": "bam-ng4"
+      "value": "cudatest02"
     },
     "fwVmSize_Premium_LRS": {
-      "value": "x"
+      "value": "Standard_DS1_v2"
     },
     "fwVmAddress": {
-      "value": "10.15.0.4"
+      "value": "10.19.0.4"
     },
     "fwSubnetName": {
       "value": "FirewallSubnet"
     },
     "fwSubnetAddress": {
-      "value": "10.15.0.0/29"
+      "value": "10.19.0.0/29"
     },
     "publicIpName": {
-      "value": "bam-ng4-pip"
+      "value": "cudatestpip02"
     },
     "publicIpDnsName": {
-      "value": "bam-ng4"
+      "value": "cudatest02"
     },
     "publicIpAddressType": {
       "value": "Dynamic"
     },
     "publicIpNewOrNone": {
-      "value": "none"
+      "value": "new"
     },
     "newStorageAccountName": {
-      "value": "bamtestng4"
+      "value": "cudateststor02"
     },
     "newStorageAccountType": {
-      "value": "Standard_LRS"
+      "value": "Premium_LRS"
     },
     "vnetName": {
-      "value": "bam-ng4-vnet"
+      "value": "newVirtualNetwork"
     },
     "vnetAddressSpace": {
-      "value": "10.15.0.0/16"
+      "value": "10.19.0.0/24"
     },
     "ccIpAddress": {
-      "value": "104.47.142.121"
+      "value": "1.2.3.4"
     },
     "ccClusterName": {
-      "value": "test"
+      "value": "fake"
     },
     "ccRangeId": {
-      "value": "1"
+      "value": "2"
     },
-      "fwVmSize_Standard_LRS": {
-          "value": "Standard_A1"
-      },
-      "ccUsername": {
-          "value": "root"
-      }
+    "ccUsername": {
+      "value": "fake"
+    },
+    "ccPassword": {
+      "value": "fake"
+    },
+    "location": {
+      "value": "canadacentral"
+    }
   }
 }
