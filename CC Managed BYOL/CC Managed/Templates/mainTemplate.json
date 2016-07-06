@@ -57,6 +57,9 @@
     },
     "ccSecret": {
       "type": "securestring"
+    },
+    "location": {
+      "type": "string"
     }
 
 
@@ -87,7 +90,7 @@
       "apiVersion": "[variables( 'apiVersion' )]",
       "type": "Microsoft.Network/virtualNetworks",
       "name": "[parameters('vnetName')]",
-      "location": "[resourceGroup().location]",
+      "location": "[parameters( 'location' )]",
       "properties": {
         "addressSpace": {
           "addressPrefixes": [
@@ -147,7 +150,7 @@
       "apiVersion": "[variables( 'apiVersion' )]",
       "type": "Microsoft.Storage/storageAccounts",
       "name": "[parameters('newStorageAccountName')]",
-      "location": "[resourceGroup().location]",
+      "location": "[parameters( 'location' )]",
       "properties": {
         "accountType": "[parameters('newStorageAccountType')]"
       }
@@ -156,7 +159,7 @@
       "apiVersion": "[variables( 'apiVersion' )]",
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[parameters('fwVmName')]",
-      "location": "[resourceGroup().location]",
+      "location": "[parameters( 'location' )]",
       "dependsOn": [
         "[resourceId( 'Microsoft.Resources/deployments', 'NICandPIP' )]",
         "[resourceId( 'Microsoft.Storage/storageAccounts', parameters( 'newStorageAccountName' ))]"
@@ -210,7 +213,7 @@
   "outputs": {
     "publicIpDomainAddress": {
       "type": "string",
-      "value": "[concat( parameters( 'publicIpDnsName' ), '.', resourceGroup().location, '.cloudapp.azure.com' )]"
+      "value": "[concat( parameters( 'publicIpDnsName' ), '.', parameters( 'location' ), '.cloudapp.azure.com' )]"
     },
     "adminPasswd": {
       "type": "string",

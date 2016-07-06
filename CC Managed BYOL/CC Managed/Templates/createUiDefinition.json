@@ -127,12 +127,12 @@
             "name": "fwVmAddress",
             "type": "Microsoft.Common.TextBox",
             "label": "Firewall static private IP address",
-            "toolTip": "Enter an IP address from the firewall subnet.",
+            "toolTip": "[concat( 'Enter an IP address from the firewall subnet (', steps( 'DeployConfig' ).virtualNetwork.subnets.fwSubnet.addressPrefix, ').' )]",
             "defaultValue": "[steps( 'DeployConfig' ).virtualNetwork.subnets.fwSubnet.startAddress]",
             "constraints": {
               "required": false,
               "regex": "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])$",
-              "validationMessage": "Must be a valid IPv4 address from Firewall Subnet"
+              "validationMessage": "[concat( 'Must be a valid IPv4 address from Firewall Subnet (', steps( 'DeployConfig' ).virtualNetwork.subnets.fwSubnet.addressPrefix, ')' )]"
             }
           },
           {
@@ -156,7 +156,9 @@
               "hideExisting": true
             },
             "constraints": {
-              "required": false
+              "required": {
+                "domainNameLabel": true
+              }
             },
             "visible": true
           }
@@ -304,7 +306,8 @@
       "ccIpAddress": "[steps( 'CCConfig' ).ccIpAddress]",
       "ccClusterName": "[steps( 'CCConfig' ).ccClusterName]",
       "ccRangeId": "[steps( 'CCConfig' ).ccRangeId]",
-      "ccSecret": "[steps( 'CCConfig' ).ccSecret]"
+      "ccSecret": "[steps( 'CCConfig' ).ccSecret]",
+      "location": "[location()]"
     }
   }
 
