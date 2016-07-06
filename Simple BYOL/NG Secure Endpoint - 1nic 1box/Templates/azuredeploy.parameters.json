@@ -41,8 +41,11 @@
     "vnetAddressSpace": {
       "value": "10.18.0.0/16"
     },
-      "fwVmSize_Premium_LRS": {
-          "value": "none"
-      }
+    "fwVmSize_Premium_LRS": {
+      "value": "none"
+    },
+    "location": {
+      "value": "southbrasil"
+    }
   }
 }
