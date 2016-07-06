@@ -6,8 +6,8 @@
       {
         "name": "fwVmName",
         "type": "Microsoft.Common.TextBox",
-        "label": "Firewall Instance Host Name",
-        "toolTip": "Provide host name for newly created instance of Barracuda NextGen Firewall F",
+        "label": "Firewall name",
+        "toolTip": "Enter the name for the new NextGen Firewall F VM.",
         "defaultValue": "BarracudaNGFW",
         "constraints": {
           "required": true,
@@ -19,10 +19,10 @@
         "name": "fwVmRootPasswd",
         "type": "Microsoft.Common.PasswordBox",
         "label": "Password for NextGen Admin access",
-        "toolTip": "Provide password for NextGen Admin console",
+        "toolTip": "Enter the root password used to log in via NextGen Admin and SSH.",
         "constraints": {
           "required": true,
-          "regex": "^(?:(?=.*[a-z])(?:(?=.*[A-Z])(?=.*[\\d\\W])|(?=.*\\W)(?=.*\\d))|(?=.*\\W)(?=.*[A-Z])(?=.*\\d)).{6,72}$",
+          "regex": "^(?:(?=.*[a-z])(?:(?=.*[A-Z])(?=.*[\\d\\W])|(?=.*\\W)(?=.*\\d))|(?=.*\\W)(?=.*[A-Z])(?=.*\\d)).{12,72}$",
           "validationMessage": "Your root password should be at least 6 characters long"
         },
         "options": {
@@ -44,8 +44,8 @@
           {
             "name": "fwVmSizeBasic",
             "type": "Microsoft.Common.DropDown",
-            "label": "Firewall Instance Size",
-            "toolTip": "Choose instance size corresponding to your license",
+            "label": "Firewall size",
+            "toolTip": "Select the firewall size.",
             "defaultValue": "2",
             "constraints": {
               "required": true,
@@ -74,7 +74,7 @@
             "name": "storageAccount",
             "type": "Microsoft.Storage.StorageAccountSelector",
             "label": "Storage Account",
-            "toolTip": "Storage Account for the disk drive of the Barracuda NextGen Firewall",
+            "toolTip": "Select the storage account for the OS disk of the F-Series Firewall VM.",
             "defaultValue": {
               "type": "Standard_LRS"
             },
@@ -98,11 +98,11 @@
             },
             "toolTip": {
               "virtualNetwork": "Virtual Network Name",
-              "subnets": "Create a separate subnet for Barracuda NGFW"
+              "subnets": "Create a dedicated subnet for the F-Series Firewall VM."
             },
             "defaultValue": {
               "name": "newVirtualNetwork",
-              "addressPrefixSize": "/16"
+              "addressPrefixSize": "/24"
             },
             "constraints": {
               "minAddressPrefixSize": "/24"
@@ -112,7 +112,7 @@
             },
             "subnets": {
               "fwSubnet": {
-                "label": "Firewall Subnet",
+                "label": "Firewall subnet",
                 "defaultValue": {
                   "name": "FirewallSubnet",
                   "addressPrefixSize": "/29"
@@ -140,8 +140,8 @@
           {
             "name": "fwVmAddress",
             "type": "Microsoft.Common.TextBox",
-            "label": "Barracuda NextGen Firewall Private IP Address",
-            "toolTip": "Provide IP address from Firewall Subnet defined above",
+            "label": "Firewall static private IP address",
+            "toolTip": "Enter an IP address from the firewall subnet.",
             "defaultValue": "[steps( 'DeployConfig' ).virtualNetwork.subnets.fwSubnet.startAddress]",
             "constraints": {
               "required": false,
@@ -153,11 +153,11 @@
             "name": "publicIp",
             "type": "Microsoft.Network.PublicIpAddressCombo",
             "label": {
-              "publicIpAddress": "Public IP Address Name",
-              "domainNameLabel": "Domain Name Label"
+              "publicIpAddress": "Public IP address name",
+              "domainNameLabel": "Domain name label"
             },
             "toolTip": {
-              "publicIpAddress": "Name of public IP address ARM resource",
+              "publicIpAddress": "Enter the name of the public IP address used for the firewall VM.",
               "domainNameLabel": "Prefix to use for public IP address DNS name (e.g. [prefix].region.cloudapp.azure.com)"
             },
             "defaultValue": {
@@ -189,8 +189,8 @@
           {
             "name": "fwVmSizeStandard",
             "type": "Microsoft.Compute.SizeSelector",
-            "label": "Virtual firewall instance size",
-            "toolTip": "The size of virtual machine to provision.",
+            "label": "Firewall VM size",
+            "toolTip": "Select the VM size and type.",
             "recommendedSizes": [
               "[concat( 'Standard_D', steps( 'DeployConfig' ).fwVmSizeBasic )]",
               "[concat( 'Standard_A', steps( 'DeployConfig' ).fwVmSizeBasic )]",
@@ -212,8 +212,8 @@
           {
             "name": "fwVmSizePremium",
             "type": "Microsoft.Compute.SizeSelector",
-            "label": "Virtual firewall instance size",
-            "toolTip": "The size of virtual machine to provision.",
+            "label": "Firewall VM size",
+            "toolTip": "Select the VM size and type.",
             "recommendedSizes": [
               "[concat( 'Standard_DS', steps( 'DeployConfig' ).fwVmSizeBasic )]",
               "[concat( 'Standard_DS', steps( 'DeployConfig' ).fwVmSizeBasic, '_v2' )]"

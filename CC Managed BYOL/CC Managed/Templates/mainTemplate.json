@@ -9,10 +9,12 @@
       "type": "string"
     },
     "fwVmSize_Standard_LRS": {
-      "type": "string"
+      "type": "string",
+      "defaultValue": ""
     },
     "fwVmSize_Premium_LRS": {
-      "type": "string"
+      "type": "string",
+      "defaultValue": ""
     },
     "fwSubnetName": {
       "type": "string"
