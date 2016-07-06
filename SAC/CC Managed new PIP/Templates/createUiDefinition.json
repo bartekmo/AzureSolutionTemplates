@@ -32,7 +32,7 @@
             "type": "Microsoft.Common.DropDown",
             "label": "SAC size",
             "toolTip": "Select the SAC size matching the purchased license.",
-            "defaultValue": "Standard_D2_v2",
+            "defaultValue": "2",
             "constraints": {
               "required": true,
               "allowedValues": [
@@ -123,12 +123,12 @@
             "name": "fwVmAddress",
             "type": "Microsoft.Common.TextBox",
             "label": "SAC static private IP address",
-            "toolTip": "Enter an IP address from the SAC subnet.",
+            "toolTip": "[concat( 'Enter an IP address from the SAC subnet (', steps( 'DeployConfig' ).virtualNetwork.subnets.fwSubnet.addressPrefix, ').' )]",
             "defaultValue": "[steps( 'DeployConfig' ).virtualNetwork.subnets.fwSubnet.startAddress]",
             "constraints": {
               "required": false,
               "regex": "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])$",
-              "validationMessage": "Must be a valid IPv4 address from Firewall Subnet"
+              "validationMessage": "[concat( 'Must be a valid IPv4 address from SAC Subnet (', steps( 'DeployConfig' ).virtualNetwork.subnets.fwSubnet.addressPrefix, ')' )]"
             }
           },
           {
@@ -152,7 +152,9 @@
               "hideExisting": true
             },
             "constraints": {
-              "required": false
+              "required": {
+                "domainNameLabel": true
+              }
             },
             "visible": true
           }
@@ -298,7 +300,8 @@
       "ccIpAddress": "[steps( 'CCConfig' ).ccIpAddress]",
       "ccClusterName": "[steps( 'CCConfig' ).ccClusterName]",
       "ccRangeId": "[steps( 'CCConfig' ).ccRangeId]",
-      "ccSecret": "[steps( 'CCConfig' ).ccSecret]"
+      "ccSecret": "[steps( 'CCConfig' ).ccSecret]",
+      "location": "[location()]"
     }
   }
 

@@ -3,31 +3,31 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "fwVmName": {
-      "value": "bam-ng3"
+      "value": "BarracudaSAC"
     },
     "fwVmSize_Standard_LRS": {
-      "value": "Standard_D1"
+      "value": "Standard_D2"
     },
     "fwVmAddress": {
-      "value": "10.17.0.4"
+      "value": "10.19.0.4"
     },
     "fwSubnetName": {
       "value": "FirewallSubnet"
     },
     "fwSubnetAddress": {
-      "value": "10.17.0.0/29"
+      "value": "10.19.0.0/29"
     },
     "publicIpName": {
-      "value": "bam-ng3-pip"
+      "value": "cudatest03"
     },
     "publicIpDnsName": {
-      "value": "bam-ng3"
+      "value": "barracudasac"
     },
     "publicIpAddressType": {
       "value": "Dynamic"
     },
     "newStorageAccountName": {
-      "value": "bamng3"
+      "value": "cudateststorage03"
     },
     "newStorageAccountType": {
       "value": "Standard_LRS"
@@ -36,22 +36,22 @@
       "value": "newVirtualNetwork"
     },
     "vnetAddressSpace": {
-      "value": "10.17.0.0/16"
+      "value": "10.19.0.0/24"
     },
     "ccIpAddress": {
-      "value": "104.47.142.121"
+      "value": "1.2.3.4"
     },
     "ccClusterName": {
-      "value": "test"
+      "value": "sac"
     },
     "ccRangeId": {
       "value": "1"
     },
     "ccSecret": {
-      "value": "a"
+      "value": "asd"
     },
-      "fwVmSize_Premium_LRS": {
-          "value": "a"
-      }
+    "location": {
+      "value": "brazilsouth"
+    }
   }
 }
