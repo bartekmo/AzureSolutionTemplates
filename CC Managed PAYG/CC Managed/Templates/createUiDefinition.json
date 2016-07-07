@@ -133,7 +133,8 @@
               "required": false,
               "regex": "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])$",
               "validationMessage": "[concat( 'Must be a valid IPv4 address from Firewall Subnet (', steps( 'DeployConfig' ).virtualNetwork.subnets.fwSubnet.addressPrefix, ')' )]"
-            }
+            },
+            "visible": false
           },
           {
             "name": "publicIp",
@@ -304,7 +305,7 @@
       "fwVmName": "[basics( 'fwVmName' )]",
       "fwVmSize_Standard_LRS": "[steps( 'AdvancedConfig' ).fwVmSizeStandard]",
       "fwVmSize_Premium_LRS": "[steps( 'AdvancedConfig' ).fwVmSizePremium]",
-      "fwVmAddress": "[steps( 'NetworkConfig' ).fwVmAddress]",
+      "fwVmAddress": "[steps( 'DeployConfig' ).virtualNetwork.subnets.fwSubnet.startAddress]",
       "fwSubnetName": "[steps( 'DeployConfig' ).virtualNetwork.subnets.fwSubnet.name]",
       "fwSubnetAddress": "[steps( 'DeployConfig' ).virtualNetwork.subnets.fwSubnet.addressPrefix]",
       "publicIpName": "[steps( 'NetworkConfig' ).publicIp.name]",
