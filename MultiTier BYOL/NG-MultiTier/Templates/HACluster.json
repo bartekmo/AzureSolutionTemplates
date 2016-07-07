@@ -40,10 +40,10 @@
       "properties": { }
     },
     {
-      "networkApiVersion": "[variables( 'apiVersion' )]",
+      "apiVersion": "[variables( 'networkApiVersion' )]",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[variables('nicName')]",
-      "location": "[variables('location')]",
+      "location": "[parameters('location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Network/loadBalancers/', parameters('lbName'))]"
       ],
@@ -77,10 +77,10 @@
       }
     },
     {
-      "networkApiVersion": "[variables( 'apiVersion' )]",
+      "apiVersion": "[variables( 'networkApiVersion' )]",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[concat(variables('nicName'),'HA')]",
-      "location": "[variables('location')]",
+      "location": "[parameters('location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Network/loadBalancers/', parameters('lbName'))]"
       ],
@@ -110,7 +110,7 @@
       "apiVersion": "[variables( 'apiVersion' )]",
       "type": "Microsoft.Network/loadBalancers",
       "name": "[parameters('lbName')]",
-      "location": "[variables('location')]",
+      "location": "[parameters('location')]",
       "dependsOn": [ ],
       "properties": {
         "frontendIPConfigurations": [
