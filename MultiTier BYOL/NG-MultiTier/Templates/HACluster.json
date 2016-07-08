@@ -258,7 +258,7 @@
           "vmSize": "[parameters('fwVmSize')]"
         },
         "osProfile": {
-          "computername": "[parameters('fwVmName')]",
+          "computerName": "[parameters('fwVmName')]",
           "adminUsername": "[variables('adminUsername')]",
           "adminPassword": "[parameters('fwVmRootPasswd')]",
           "customData": "[base64(concat('{\"version\" : \"1.0\", \"dha\" : { \"flags\" : [\"primary\"], \"ip\" : \"', parameters('fwVmAddress1'), '\", \"haip\" : \"', parameters('fwVmAddress2'), '\", \"gateway\" : \"', parameters('fwSubnetDefaultGw'), '\", \"password\" : \"', parameters('fwVmRootPasswd'), '\" }}'))]"
@@ -310,7 +310,7 @@
           "vmSize": "[parameters('fwVmSize')]"
         },
         "osProfile": {
-          "computername": "[concat(parameters('fwVmName'),'-HA')]",
+          "computerName": "[concat(parameters('fwVmName'),'-HA')]",
           "adminUsername": "[variables('adminUsername')]",
           "adminPassword": "[parameters('fwVmRootPasswd')]",
           "customData": "[base64(concat('{\"version\" : \"1.0\", \"dha\" : { \"haip\" : \"', parameters('fwVmAddress1'), '\", \"gateway\" : \"', parameters('fwSubnetDefaultGw'), '\", \"password\" : \"', parameters('fwVmRootPasswd'), '\" }}'))]"
@@ -337,6 +337,12 @@
               "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('nicName'),'ha'))]"
             }
           ]
+        },
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": true,
+            "storageUri": "http://bamdiags.blob.core.windows.net"
+          }
         }
       }
     }
