@@ -81,7 +81,8 @@
           },
           "publicIpAddressType": {
             "value": "[parameters( 'publicIpAddressType' )]"
-          }
+          },
+          "location": "[parameters( 'location' )]"
         }
       }
     },
@@ -218,7 +219,7 @@
   "outputs": {
     "publicIpDomainAddress": {
       "type": "string",
-      "value": "[reference( resourceId( 'Microsoft.Network/publicIPAddresses', parameters( 'publicIpName' ))).dnsSettings.fqdn]"
+      "value": "[reference( 'publicIp' ).outputs.publicIpDomainAddress.value ]"
     }
 
   }

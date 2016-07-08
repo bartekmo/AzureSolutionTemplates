@@ -4,18 +4,18 @@
   "parameters": {
     "publicIpName": { "type": "string" },
     "publicIpAddressType": { "type": "string" },
-    "publicIpDnsName": {"type": "string"}
+    "publicIpDnsName": { "type": "string" },
+    "location": { "type": "string" }
   },
   "variables": {
-    "apiVersion": "2015-06-15",
-    "location": "[resourceGroup().location]"
+    "apiVersion": "2015-06-15"
   },
   "resources": [
     {
       "apiVersion": "[variables( 'apiVersion' )]",
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "[parameters('publicIPName')]",
-      "location": "[variables('location')]",
+      "location": "[parameters('location')]",
       "properties": {
         "publicIPAllocationMethod": "[parameters('publicIPAddressType')]",
         "dnsSettings": {
@@ -25,6 +25,10 @@
     }
   ],
   "outputs": {
+    "publicIpDomainAddress": {
+      "type": "string",
+      "value": "[reference( resourceId( 'Microsoft.Network/publicIPAddresses', parameters( 'publicIpName' ))).dnsSettings.fqdn]"
+    }
   }
 }
 
