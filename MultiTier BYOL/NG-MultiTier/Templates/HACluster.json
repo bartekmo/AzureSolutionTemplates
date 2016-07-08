@@ -293,7 +293,7 @@
       "name": "[concat( parameters('fwVmName'), '-HA' )]",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "[resourceId( 'Microsoft.Network/networkInterfaces', variables( 'nicName' ), 'HA')]",
+        "[resourceId( 'Microsoft.Network/networkInterfaces', concat( variables( 'nicName' ), 'HA'))]",
         "[resourceId( 'Microsoft.COmpute/virtualMachines', parameters( 'fwVmName' ) )]"
       ],
       "plan": {
