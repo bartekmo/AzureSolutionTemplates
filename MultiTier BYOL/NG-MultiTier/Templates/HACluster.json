@@ -19,7 +19,7 @@
   },
   "variables": {
     "apiVersion": "2015-06-15",
-    "networkApiVersion": "2016-03-30",
+    "networkApiVersion": "2016-07-01",
     "nicName": "[concat( parameters( 'fwVmName' ), 'Nic' )]",
     "lbId": "[resourceId('Microsoft.Network/loadBalancers',parameters( 'lbName' ))]",
     "frontEndIPConfigID": "[concat(variables('lbID'),'/frontendIPConfigurations/LoadBalancerFrontEnd')]",
@@ -52,7 +52,6 @@
           {
             "name": "ipconfig1",
             "properties": {
-              "enableIPForwarding": true,
               "privateIPAllocationMethod": "Static",
               "privateIPAddress": "[parameters('fwVmAddress1')]",
               "subnet": {
@@ -70,7 +69,8 @@
                 {
                   "id": "[concat(variables('lbID'),'/inboundNatRules/MGMT-VM')]"
                 }
-              ]
+              ],
+              "enableIPForwarding": true
             }
           }
         ]
@@ -89,7 +89,6 @@
           {
             "name": "ipconfig2",
             "properties": {
-              "enableIPForwarding": true,
               "privateIPAllocationMethod": "Static",
               "privateIPAddress": "[parameters('fwVmAddress2')]",
               "subnet": {
@@ -100,7 +99,8 @@
                   "id": "[concat(variables('lbID'), '/backendAddressPools/BackendPool1')]"
                 }
               ],
-              "loadBalancerInboundNatRules": [ ]
+              "loadBalancerInboundNatRules": [ ],
+              "enableIPForwarding": true
             }
           }
         ]
