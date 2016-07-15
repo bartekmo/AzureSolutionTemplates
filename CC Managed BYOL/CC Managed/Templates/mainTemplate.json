@@ -23,13 +23,16 @@
       "type": "string"
     },
     "publicIpName": {
-      "type": "string"
+      "type": "string",
+      "defaultValue": "null"
     },
     "publicIpDnsName": {
-      "type": "string"
+      "type": "string",
+      "defaultValue": "null"
     },
     "publicIpAddressType": {
-      "type": "string"
+      "type": "string",
+      "defaultValue": "null"
     },
     "publicIpNewOrNone": {
       "type": "string"

@@ -34,7 +34,7 @@
     </None>
     <Content Include="Scripts\Deploy-AzureResourceGroup.ps1" />
     <Content Include="Templates\mainTemplate.json" />
-    <Content Include="Templates\azuredeploy.parameters.json" />
+    <Content Include="Templates\azuredeploy.parameters.none.json" />
     <None Include="Templates\createUiDefinition.json" />
     <None Include="Templates\pipnic-existing.json" />
     <None Include="Templates\pipnic-new.json" />

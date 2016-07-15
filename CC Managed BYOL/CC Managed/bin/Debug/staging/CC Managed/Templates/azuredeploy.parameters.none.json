@@ -1,0 +1,51 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "fwVmName": {
+      "value": "testNG01"
+    },
+    "fwVmSize_Standard_LRS": {
+      "value": "Standard_D1_v2"
+    },
+    "fwVmAddress": {
+      "value": "10.19.0.4"
+    },
+    "fwSubnetName": {
+      "value": "FirewallSubnet"
+    },
+    "fwSubnetAddress": {
+      "value": "10.19.0.0/29"
+    },
+    "publicIpNewOrNone": {
+      "value": "none"
+    },
+    "newStorageAccountName": {
+      "value": "cudateststrg01"
+    },
+    "newStorageAccountType": {
+      "value": "Standard_LRS"
+    },
+    "vnetName": {
+      "value": "newVirtualNetwork"
+    },
+    "vnetAddressSpace": {
+      "value": "10.19.0.0/24"
+    },
+    "ccIpAddress": {
+      "value": "1.2.3.4"
+    },
+    "ccClusterName": {
+      "value": "asd"
+    },
+    "ccRangeId": {
+      "value": "1"
+    },
+    "ccSecret": {
+      "value": "asd"
+    },
+    "location": {
+      "value": "eastus"
+    }
+  }
+}
