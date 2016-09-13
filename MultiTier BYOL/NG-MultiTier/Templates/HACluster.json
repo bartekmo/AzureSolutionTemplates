@@ -261,7 +261,7 @@
           "computerName": "[parameters('fwVmName')]",
           "adminUsername": "[variables('adminUsername')]",
           "adminPassword": "[parameters('fwVmRootPasswd')]",
-          "customData": "[base64(concat('{\"version\" : \"1.0\", \"dha\" : { \"flags\" : [\"primary\"], \"ip\" : \"', parameters('fwVmAddress1'), '\", \"haip\" : \"', parameters('fwVmAddress2'), '\", \"gateway\" : \"', parameters('fwSubnetAddress'), '\", \"nexthop\" : \"', parameters('fwSubnetDefaultGw'), '\", \"password\" : \"', parameters('fwVmRootPasswd'), '\" }}'))]"
+          "customData": "[base64(concat('{\"version\" : \"1.0\", \"dha\" : { \"flags\" : [\"primary\"], \"ip\" : \"', parameters('fwVmAddress1'), '\", \"haip\" : \"', parameters('fwVmAddress2'), '\", \"subnet\" : \"', parameters('fwSubnetAddress'), '\", \"gateway\" : \"', parameters('fwSubnetDefaultGw'), '\", \"password\" : \"', parameters('fwVmRootPasswd'), '\" }}'))]"
         },
         "storageProfile": {
           "imageReference": {
@@ -299,8 +299,7 @@
       "name": "[concat( parameters('fwVmName'), '-HA' )]",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "[resourceId( 'Microsoft.Network/networkInterfaces', concat( variables( 'nicName' ), 'HA'))]",
-        "[resourceId( 'Microsoft.Compute/virtualMachines', parameters( 'fwVmName' ) )]"
+        "[resourceId( 'Microsoft.Network/networkInterfaces', concat( variables( 'nicName' ), 'HA'))]"
       ],
       "plan": {
         "name": "[parameters('imageSku')]",
@@ -318,7 +317,7 @@
           "computerName": "[concat(parameters('fwVmName'),'-HA')]",
           "adminUsername": "[variables('adminUsername')]",
           "adminPassword": "[parameters('fwVmRootPasswd')]",
-          "customData": "[base64(concat('{\"version\" : \"1.0\", \"dha\" : { \"haip\" : \"', parameters('fwVmAddress2'), '\", \"gateway\" : \"', parameters('fwSubnetAddress'), '\", \"nexthop\" : \"', parameters('fwSubnetDefaultGw'), '\", \"password\" : \"', parameters('fwVmRootPasswd'), '\" }}'))]"
+          "customData": "[base64(concat('{\"version\" : \"1.0\", \"dha\" : { \"haip\" : \"', parameters('fwVmAddress2'), '\", \"subnet\" : \"', parameters('fwSubnetAddress'), '\", \"gateway\" : \"', parameters('fwSubnetDefaultGw'), '\", \"password\" : \"', parameters('fwVmRootPasswd'), '\" }}'))]"
         },
         "storageProfile": {
           "imageReference": {
