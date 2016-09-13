@@ -227,7 +227,7 @@
             "options": {
               "hideNone": false,
               "hideDomainNameLabel": false,
-              "hideExisting": true
+              "hideExisting": false
             },
             "constraints": {
               "required": false
@@ -301,31 +301,6 @@
             "visible": "[equals( steps( 'DeployConfig' ).storageAccount.type, 'Premium_LRS' )]"
           },
           {
-            "name": "fwVmAddress1",
-            "type": "Microsoft.Common.TextBox",
-            "label": "Primary Instance Private IP Address",
-            "toolTip": "Provide IP address from Firewall Subnet defined above",
-            "defaultValue": "[steps( 'NetworkConfig' ).virtualNetwork.subnets.fwSubnet.startAddress]",
-            "constraints": {
-              "required": false,
-              "regex": "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])$",
-              "validationMessage": "Must be a valid IPv4 address from Firewall Subnet"
-            }
-          },
-          {
-            "name": "fwVmAddress2",
-            "type": "Microsoft.Common.TextBox",
-            "label": "Secondary Instance Private IP Address",
-            "toolTip": "Provide IP address from Firewall Subnet defined above",
-            "defaultValue": "[concat( substring( steps( 'NetworkConfig' ).virtualNetwork.subnets.fwSubnet.startAddress, 0, sub(length( steps( 'NetworkConfig' ).virtualNetwork.subnets.fwSubnet.startAddress ), 1 )), string( add( int( last( steps( 'NetworkConfig' ).virtualNetwork.subnets.fwSubnet.startAddress )), 1 )))]",
-            "constraints": {
-              "required": false,
-              "regex": "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])$",
-              "validationMessage": "Must be a valid IPv4 address from Firewall Subnet"
-            },
-            "visible": "[equals( steps( 'DeployConfig' ).fwVmCount, 'HACluster' )]"
-          },
-          {
             "name": "lbName",
             "type": "Microsoft.Common.TextBox",
             "label": "Load Balancer resource name",
@@ -374,8 +349,8 @@
       "fwVmName": "[basics( 'fwVmName' )]",
       "fwVmSize_Standard_LRS": "[steps( 'Advanced' ).fwVmSize ]",
       "fwVmSize_Premium_LRS": "[steps( 'Advanced' ).fwVmSizePremium ]",
-      "fwVmAddress1": "[steps( 'Advanced' ).fwVmAddress1]",
-      "fwVmAddress2": "[steps( 'Advanced' ).fwVmAddress2]",
+      "fwVmAddress1": "[steps( 'NetworkConfig' ).virtualNetwork.subnets.fwSubnet.startAddress]",
+      "fwVmAddress2": "[concat( substring( steps( 'NetworkConfig' ).virtualNetwork.subnets.fwSubnet.startAddress, 0, sub(length( steps( 'NetworkConfig' ).virtualNetwork.subnets.fwSubnet.startAddress ), 1 )), string( add( int( last( steps( 'NetworkConfig' ).virtualNetwork.subnets.fwSubnet.startAddress )), 1 )))]",
       "fwVmRootPasswd": "[basics( 'fwVmRootPasswd' )]",
       "fwSubnetName": "[steps( 'NetworkConfig' ).virtualNetwork.subnets.fwSubnet.name]",
       "fwSubnetAddress": "[steps( 'NetworkConfig' ).virtualNetwork.subnets.fwSubnet.addressPrefix]",
