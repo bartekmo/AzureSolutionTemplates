@@ -28,7 +28,10 @@
     "haSetName": { "type": "string" },
     "fwVmCount": { "type": "string" },
     "location": { "type": "string" },
-    "baseUrl": { "type": "string" }
+    "baseUrl": {
+      "type": "string",
+      "defaultValue": "https: //raw.githubusercontent.com/bartekmo/AzureSolutionTemplates/master/MultiTier%20BYOL/NG-MultiTier/Templates"
+    }
   },
   "variables": {
     "imageSku": "byol",
@@ -49,9 +52,8 @@
     "fwSubnetMask": "[variables( 'fwSubnetSplit' )[1]]",
     "fwSubnetRef": "[concat( variables( 'vnetID' ), '/subnets/', parameters( 'fwSubnetName' ) )]",
     "fwSubnetDefaultGw": "[concat( variables( 'fwSubnetAddrSplit' )[0], '.', variables( 'fwSubnetAddrSplit' )[1], '.', variables( 'fwSubnetAddrSplit' )[2], '.', add( int( variables( 'fwSubnetAddrSplit' )[3]), 1 ))]",
-    "artifactsUriBase": "https://raw.githubusercontent.com/bartekmo/AzureSolutionTemplates/master/MultiTier%20BYOL/NG-MultiTier/Templates/",
-    "deployByCountUri": "[concat( variables( 'artifactsUriBase' ), parameters( 'fwVmCount' ), '.json' )]",
-    "deployPublicIpUri": "[concat( variables( 'artifactsUriBase' ), 'publicIp-', parameters( 'publicIpNewOrNone' ), '.json' )]"
+    "deployByCountUri": "[concat( parameters( 'baseUrl' ), '/', parameters( 'fwVmCount' ), '.json' )]",
+    "deployPublicIpUri": "[concat( parameters( 'baseUrl' ), '/publicIp-', parameters( 'publicIpNewOrNone' ), '.json' )]"
   },
   "resources": [
     {
