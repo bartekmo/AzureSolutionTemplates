@@ -46,7 +46,7 @@
             "type": "Microsoft.Common.DropDown",
             "label": "Firewall size",
             "toolTip": "Select the firewall size matching the purchased license.",
-            "defaultValue": "2",
+            "defaultValue": "Medium (Level 4)",
             "constraints": {
               "required": true,
               "allowedValues": [
@@ -74,7 +74,7 @@
             "name": "fwVmCount",
             "type": "Microsoft.Common.OptionsGroup",
             "label": "Deployment Type",
-            "defaultValue": "HACluster",
+            "defaultValue": "HA Cluster",
             "constraints": {
               "allowedValues": [
                 {
@@ -87,6 +87,24 @@
                 }
               ],
               "required": true
+            }
+          },
+          {
+            "name": "licenseMode",
+            "type": "Microsoft.Common.OptionsGroup",
+            "label": "License Type",
+            "defaultValue": "BYOL",
+            "constraints": {
+              "allowedValues": [
+                {
+                  "label": "PAYG",
+                  "value": "hourly"
+                },
+                {
+                  "label": "BYOL",
+                  "value": "byol"
+                }
+              ]
             }
           },
           {
@@ -233,9 +251,10 @@
             "label": "Firewall VM size",
             "toolTip": "Select the VM size. The number of CPU cores must match your license.",
             "recommendedSizes": [
-              "[concat( 'Standard_D', steps( 'DeployConfig' ).fwVmSizeBasic )]",
-              "[concat( 'Standard_A', steps( 'DeployConfig' ).fwVmSizeBasic )]",
-              "[concat( 'Standard_D', steps( 'DeployConfig' ).fwVmSizeBasic, '_v2' )]"
+              "[concat( 'Standard_D', steps( 'DeployConfig' ).fwVmSizeBasic, '_v2' )]",
+              "[concat( 'Standard_F', steps( 'DeployConfig' ).fwVmSizeBasic )]",
+              "[concat( 'Standard_A', steps( 'DeployConfig' ).fwVmSizeBasic )]"
+
             ],
             "constraints": {
               "allowedSizes": [ ],
@@ -245,7 +264,7 @@
             "imageReference": {
               "publisher": "barracudanetworks",
               "offer": "barracuda-ng-firewall",
-              "sku": "byol"
+              "sku": "[steps( 'DeployConfig' ).licenseMode]"
             },
             "count": "[add( mod( length( steps( 'DeployConfig' ).fwVmCount ), 2 ), 1 )]",
             "visible": "[equals( steps( 'DeployConfig' ).storageAccount.type, 'Standard_LRS' )]"
@@ -276,7 +295,7 @@
             "imageReference": {
               "publisher": "barracudanetworks",
               "offer": "barracuda-ng-firewall",
-              "sku": "byol"
+              "sku": "[steps( 'DeployConfig' ).licenseMode]"
             },
             "count": "[add( mod(length( steps( 'DeployConfig' ).fwVmCount), 2 ), 1 )]",
             "visible": "[equals( steps( 'DeployConfig' ).storageAccount.type, 'Premium_LRS' )]"
@@ -377,6 +396,7 @@
       "lbName": "[steps( 'Advanced' ).lbName]",
       "haSetName": "[steps( 'Advanced' ).haSetName]",
       "fwVmCount": "[steps( 'DeployConfig' ).fwVmCount]",
+      "imageSku": "[steps( 'DeployConfig' ).licenseMode]",
       "location": "[location()]"
     }
   }
