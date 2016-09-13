@@ -279,6 +279,11 @@
             }
           }
         },
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": false
+          }
+        },
         "networkProfile": {
           "networkInterfaces": [
             {
@@ -329,6 +334,11 @@
             "vhd": {
               "uri": "[concat('https://',parameters('newStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/',parameters('fwVmName'),'ha','.vhd')]"
             }
+          }
+        },
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": false
           }
         },
         "networkProfile": {

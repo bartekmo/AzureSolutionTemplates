@@ -27,7 +27,8 @@
     "lbName": { "type": "string" },
     "haSetName": { "type": "string" },
     "fwVmCount": { "type": "string" },
-    "location": { "type": "string" }
+    "location": { "type": "string" },
+    "baseUrl": { "type": "string" }
   },
   "variables": {
     "imageSku": "byol",

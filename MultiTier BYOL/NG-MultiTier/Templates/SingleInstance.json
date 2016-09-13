@@ -94,6 +94,11 @@
             }
           }
         },
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": false
+          }
+        },
         "networkProfile": {
           "networkInterfaces": [
             {
