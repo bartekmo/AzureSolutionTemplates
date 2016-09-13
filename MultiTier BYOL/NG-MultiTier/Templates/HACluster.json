@@ -261,7 +261,7 @@
           "computerName": "[parameters('fwVmName')]",
           "adminUsername": "[variables('adminUsername')]",
           "adminPassword": "[parameters('fwVmRootPasswd')]",
-          "customData": "[base64(concat('{\"version\" : \"1.0\", \"dha\" : { \"flags\" : [\"primary\"], \"ip\" : \"', parameters('fwVmAddress1'), '\", \"haip\" : \"', parameters('fwVmAddress2'), '\", \"subnet\" : \"', parameters('fwSubnetAddress'), '\", \"gateway\" : \"', parameters('fwSubnetDefaultGw'), '\", \"password\" : \"', parameters('fwVmRootPasswd'), '\" }}'))]"
+          "customData": "[base64(concat('{\"version\" : \"1.0\", \"dha\" : { \"flags\" : \"primary\", \"ip\" : \"', parameters('fwVmAddress1'), '\", \"haip\" : \"', parameters('fwVmAddress2'), '\", \"subnet\" : \"', parameters('fwSubnetAddress'), '\", \"gateway\" : \"', parameters('fwSubnetDefaultGw'), '\", \"password\" : \"', parameters('fwVmRootPasswd'), '\" }}'))]"
         },
         "storageProfile": {
           "imageReference": {

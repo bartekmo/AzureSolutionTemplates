@@ -75,10 +75,13 @@
       "value": "HACluster"
     },
     "location": {
-      "value": "westeurope"
+      "value": "northeurope"
     },
       "fwVmSize_Standard_LRS": {
           "value": "-"
+      },
+      "baseUrl": {
+          "value": "a"
       }
   }
 }
