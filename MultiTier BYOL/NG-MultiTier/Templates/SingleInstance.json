@@ -62,6 +62,9 @@
           },
           "location": {
             "value": "[parameters('location')]"
+          },
+          "nicName": {
+            "value": "[variables('nicName')]"
           }
         }
       }
