@@ -90,7 +90,7 @@
           "computerName": "[parameters('fwVmName')]",
           "adminUsername": "[variables('adminUsername')]",
           "adminPassword": "[parameters('fwVmRootPasswd')]",
-          "customData": "[base64( variables( 'editconfScript' ))]"
+          "customData": "[base64( concat( '#!/bin/bash\n\n', variables( 'editconfScript' )))]"
         },
         "storageProfile": {
           "imageReference": {
