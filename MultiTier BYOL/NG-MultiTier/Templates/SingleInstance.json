@@ -54,8 +54,7 @@
       "name": "[parameters('fwVmName')]",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/networkInterfaces/', variables('nicName'))]",
-        "[resourceId('Microsoft.Compute/availabilitySets/', parameters('haSetName'))]"
+        "[resourceId('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
       ],
       "plan": {
         "name": "[parameters('imageSku')]",
@@ -63,9 +62,6 @@
         "Publisher": "[variables('imagePublisher')]"
       },
       "properties": {
-        "availabilitySet": {
-          "id": "[resourceId('Microsoft.Compute/availabilitySets', parameters('haSetName'))]"
-        },
         "hardwareProfile": {
           "vmSize": "[parameters('fwVmSize')]"
         },
