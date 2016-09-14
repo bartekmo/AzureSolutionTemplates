@@ -41,11 +41,11 @@
               "privateIPAddress": "[parameters('fwVmAddress1')]",
               "subnet": {
                 "id": "[parameters( 'fwSubnetRef' )]"
-              },
-              "enableIPForwarding": true
+              }
             }
           }
-        ]
+        ],
+        "enableIPForwarding": true
       }
     },
     {
