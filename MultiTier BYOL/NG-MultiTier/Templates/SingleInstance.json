@@ -15,6 +15,8 @@
     "fwSubnetDefaultGw": { "type": "string" },
     "lbName": { "type": "string" },
     "newStorageAccountName": { "type": "string" },
+    "publicIpNewOrNone": { "type": "string" },
+    "baseUrl": { "type": "string" },
     "location": { "type": "string" }
   },
   "variables": {
@@ -24,84 +26,101 @@
     "imagePublisher": "barracudanetworks",
     "imageOffer": "barracuda-ng-firewall",
     "adminUsername": "will-be-replaced-by-root",
-    "vmStorageAccountContainerName": "vhds"
+    "vmStorageAccountContainerName": "vhds",
+    "deployNicUri": "[concat( parameters( 'baseUrl' ), '/NicSingleInstance-pip-', parameters( 'publicIpNewOrNone' ), '.json' )]",
+    "editconf": "/opt/phion/bin/editconf ",
+    "cfgroot": "/opt/phion/config/configroot/",
+    "cfgactive": "/opt/phion/config/active/",
+    "editconfSetSubIdRoot": "[concat( variables('editconf'), '-f ', variables('cfgroot'), 'boxother/cloudintegration.conf -s azure -p SUBSCRIPTIONID -v ', subscription().subscriptionId, '\n')]",
+    "editconfSetSubIdActive": "[concat( variables('editconf'), '-f ', variables('cfgactive'), 'cloudintegration.conf -s azure -p SUBSCRIPTIONID -v ', subscription().subscriptionId, '\n')]",
+    "editconfSetTenantIdRoot": "[concat( variables('editconf'), '-f ', variables('cfgroot'), 'boxother/cloudintegration.conf -s azure -p TENANTID -v ', subscription().tenantId, '\n')]",
+    "editconfSetTenantIdActive": "[concat( variables('editconf'), '-f ', variables('cfgactive'), 'cloudintegration.conf -s azure -p TENANTID -v ', subscription().tenantId, '\n')]",
+    "editconfSetRgRoot": "[concat( variables('editconf'), '-f ', variables('cfgroot'), 'boxother/cloudintegration.conf -s azure -p RESOURCEGROUP -v ', resourceGroup().name, '\n')]",
+    "editconfSetRgActive": "[concat( variables('editconf'), '-f ', variables('cfgactive'), 'cloudintegration.conf -s azure -p RESOURCEGROUP -v ', resourceGroup().name, '\n')]",
+    "editconfScript": "[concat( variables( 'editconfSetSubIdRoot' ), variables( 'editconfSetSubIdRoot' ), variables( 'editconfSetTenantIdRoot' ), variables( 'editconfSetTenantIdActive' ), variables( 'editconfSetRgRoot' ), variables( 'editconfSetRgActive' ))]"
   },
   "resources": [
     {
-      "apiVersion": "[variables( 'networkApiVersion' )]",
-      "type": "Microsoft.Network/networkInterfaces",
-      "name": "[variables('nicName')]",
-      "location": "[parameters('location')]",
+      "name": "SingleFirewallNic",
+      "type": "Microsoft.Resources/deployments",
       "properties": {
-        "ipConfigurations": [
-          {
-            "name": "ipconfig1",
-            "properties": {
-              "privateIPAllocationMethod": "Static",
-              "privateIPAddress": "[parameters('fwVmAddress1')]",
-              "subnet": {
-                "id": "[parameters( 'fwSubnetRef' )]"
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables( 'deployNicUri' )]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "fwVmAddress1": {
+            "value": "[parameters('fwVmAddress1')]" 
+          },
+          "fwSubnetRef": {
+            "value": "[parameters('fwSubnetRef')]"
+          },
+          "publicIpRef": {
+            "value": "[parameters('publicIpRef')]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "nicName": {
+            "value": "[variables('nicName')]"
+          }
+        }
+      },
+      {
+        "apiVersion": "[variables( 'apiVersion' )]",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "[parameters('fwVmName')]",
+        "location": "[parameters('location')]",
+        "dependsOn": [
+          "[resourceId('Microsoft.Resources/deployments/', variables('nicName'))]"
+        ],
+        "plan": {
+          "name": "[parameters('imageSku')]",
+          "Product": "[variables('imageOffer')]",
+          "Publisher": "[variables('imagePublisher')]"
+        },
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "[parameters('fwVmSize')]"
+          },
+          "osProfile": {
+            "computername": "[parameters('fwVmName')]",
+            "adminUsername": "[variables('adminUsername')]",
+            "adminPassword": "[parameters('fwVmRootPasswd')]",
+            "customData": "[base64( variables( 'editconfScript' ))]"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "[variables('imagePublisher')]",
+              "offer": "[variables('imageOffer')]",
+              "sku": "[parameters('imageSku')]",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "[concat(parameters('fwVmName'),'-osDisk')]",
+              "caching": "ReadWrite",
+              "createOption": "FromImage",
+              "vhd": {
+                "uri": "[concat('https://',parameters('newStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/',parameters('fwVmName'),'.vhd')]"
               }
             }
-          }
-        ],
-        "enableIPForwarding": true
-      }
-    },
-    {
-      "apiVersion": "[variables( 'apiVersion' )]",
-      "type": "Microsoft.Compute/virtualMachines",
-      "name": "[parameters('fwVmName')]",
-      "location": "[parameters('location')]",
-      "dependsOn": [
-        "[resourceId('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
-      ],
-      "plan": {
-        "name": "[parameters('imageSku')]",
-        "Product": "[variables('imageOffer')]",
-        "Publisher": "[variables('imagePublisher')]"
-      },
-      "properties": {
-        "hardwareProfile": {
-          "vmSize": "[parameters('fwVmSize')]"
-        },
-        "osProfile": {
-          "computername": "[parameters('fwVmName')]",
-          "adminUsername": "[variables('adminUsername')]",
-          "adminPassword": "[parameters('fwVmRootPasswd')]",
-          "customData": "[base64( concat( '#!/bin/bash\n\n', '/opt/phion/bin/editconf -f /opt/phion/config/configroot/boxother/cloudintegration.conf -s azure -p SUBSCRIPTIONID -v ', subscription().subscriptionId, '\n', '/opt/phion/bin/editconf -f /opt/phion/config/active/cloudintegration.conf -s azure -p SUBSCRIPTIONID -v ', subscription().subscriptionId, '\n', '/opt/phion/bin/editconf -f /opt/phion/config/configroot/boxother/cloudintegration.conf -s azure -p TENANTID -v ', subscription().tenantId, '\n', '/opt/phion/bin/editconf -f /opt/phion/config/active/cloudintegration.conf -s azure -p TENANTID -v ', subscription().tenantId, '\n'))]"
-        },
-        "storageProfile": {
-          "imageReference": {
-            "publisher": "[variables('imagePublisher')]",
-            "offer": "[variables('imageOffer')]",
-            "sku": "[parameters('imageSku')]",
-            "version": "latest"
           },
-          "osDisk": {
-            "name": "[concat(parameters('fwVmName'),'-osDisk')]",
-            "caching": "ReadWrite",
-            "createOption": "FromImage",
-            "vhd": {
-              "uri": "[concat('https://',parameters('newStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/',parameters('fwVmName'),'.vhd')]"
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": false
             }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName'))]"
+              }
+            ]
           }
-        },
-        "diagnosticsProfile": {
-          "bootDiagnostics": {
-            "enabled": false
-          }
-        },
-        "networkProfile": {
-          "networkInterfaces": [
-            {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName'))]"
-            }
-          ]
         }
+      },
+
+      "outputs": {
       }
     }
-  ],
-  "outputs": {
-  }
-}

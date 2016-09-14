@@ -1,0 +1,39 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "fwVmAddress1": { "type": "string" },
+    "fwSubnetRef": { "type": "string" },
+    "publicIpRef": { "type": "string" },
+    "location": { "type": "string" },
+    "nicName": { "type": "string" }
+  },
+  "variables": { },
+  "resources": [
+    {
+      "apiVersion": "2016-07-01",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[parameters('nicName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Static",
+              "privateIPAddress": "[parameters('fwVmAddress1')]",
+              "publicIPAddress": {
+                "id": "[parameters( 'publicIpRef' )]"
+              },
+              "subnet": {
+                "id": "[parameters( 'fwSubnetRef' )]"
+              }
+            }
+          }
+        ],
+        "enableIPForwarding": true
+      }
+    }
+  ],
+  "outputs": { }
+}
