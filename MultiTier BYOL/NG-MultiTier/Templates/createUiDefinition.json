@@ -361,6 +361,7 @@
       "tier3SubnetName": "[steps( 'NetworkConfig' ).virtualNetwork.subnets.tier3Subnet.name]",
       "tier3SubnetAddress": "[steps( 'NetworkConfig' ).virtualNetwork.subnets.tier3Subnet.addressPrefix]",
       "publicIpName": "[steps( 'NetworkConfig' ).publicIp.name]",
+      "publicIpResourceGroup": "[steps( 'NetworkConfig' ).publicIp.resourceGroup]",
       "publicIpDnsName": "[steps( 'NetworkConfig' ).publicIp.domainNameLabel]",
       "publicIpAddressType": "[steps( 'Advanced' ).publicIpAddressType]",
       "publicIpNewOrNone": "[steps( 'NetworkConfig' ).publicIp.newOrExistingOrNone]",

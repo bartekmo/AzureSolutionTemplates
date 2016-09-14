@@ -1,0 +1,84 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "fwVmName": {
+      "value": "bam-testmtier4"
+    },
+    "fwVmSize_Premium_LRS": {
+      "value": "Standard_DS1_v2"
+    },
+    "fwVmAddress1": {
+      "value": "172.17.0.4"
+    },
+    "fwVmAddress2": {
+      "value": "172.17.0.5"
+    },
+    "fwVmRootPasswd": {
+      "value": "asdqweQWE123"
+    },
+    "fwSubnetName": {
+      "value": "FirewallSubnet"
+    },
+    "fwSubnetAddress": {
+      "value": "172.17.0.0/29"
+    },
+    "tier1SubnetName": {
+      "value": "Tier1Subnet"
+    },
+    "tier1SubnetAddress": {
+      "value": "172.17.1.0/24"
+    },
+    "tier2SubnetName": {
+      "value": "Tier2Subnet"
+    },
+    "tier2SubnetAddress": {
+      "value": "172.17.2.0/24"
+    },
+    "tier3SubnetName": {
+      "value": "Tier3Subnet"
+    },
+    "tier3SubnetAddress": {
+      "value": "172.17.3.0/24"
+    },
+    "publicIpDnsName": {
+      "value": ""
+    },
+    "publicIpAddressType": {
+      "value": "Dynamic"
+    },
+    "publicIpNewOrNone": {
+      "value": "none"
+    },
+    "newStorageAccountName": {
+      "value": "bamtestmtier4"
+    },
+    "newStorageAccountType": {
+      "value": "Premium_LRS"
+    },
+    "vnetName": {
+      "value": "MultiTierVnet"
+    },
+    "vnetAddressSpace": {
+      "value": "172.17.0.0/16"
+    },
+    "lbName": {
+      "value": "loadbal-bam-testmtier4"
+    },
+    "haSetName": {
+      "value": "haSet-bam-testmtier4"
+    },
+    "fwVmCount": {
+      "value": "HACluster"
+    },
+    "imageSku": {
+      "value": "byol"
+    },
+    "location": {
+      "value": "eastus2"
+    },
+    "baseUrl": {
+      "value": "https: //raw.githubusercontent.com/bartekmo/AzureSolutionTemplates/master/MultiTier%20BYOL/NG-MultiTier/Templates"
+    }
+  }
+}

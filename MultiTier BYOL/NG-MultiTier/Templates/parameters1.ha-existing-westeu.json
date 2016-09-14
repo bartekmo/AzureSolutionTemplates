@@ -1,0 +1,87 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "fwVmName": {
+      "value": "bam-testmtier1"
+    },
+    "fwVmSize_Standard_LRS": {
+      "value": "Standard_D2_v2"
+    },
+    "fwVmSize_Premium_LRS": {
+      "value": "none"
+    },
+    "fwVmAddress1": {
+      "value": "10.6.0.4"
+    },
+    "fwVmAddress2": {
+      "value": "10.6.0.5"
+    },
+    "fwVmRootPasswd": {
+      "value": "asdqweQWE123"
+    },
+    "fwSubnetName": {
+      "value": "FirewallSubnet"
+    },
+    "fwSubnetAddress": {
+      "value": "10.6.0.0/29"
+    },
+    "tier1SubnetName": {
+      "value": "Tier1Subnet"
+    },
+    "tier1SubnetAddress": {
+      "value": "10.6.1.0/24"
+    },
+    "tier2SubnetName": {
+      "value": "Tier2Subnet"
+    },
+    "tier2SubnetAddress": {
+      "value": "10.6.2.0/24"
+    },
+    "tier3SubnetName": {
+      "value": "Tier3Subnet"
+    },
+    "tier3SubnetAddress": {
+      "value": "10.6.3.0/24"
+    },
+    "publicIpName": {
+      "value": "bam-test-mtier1-ip"
+    },
+    "publicIpResourceGroup": {
+      "value": "bam-tests"
+    },
+    "publicIpAddressType": {
+      "value": "Dynamic"
+    },
+    "publicIpNewOrNone": {
+      "value": "existing"
+    },
+    "newStorageAccountName": {
+      "value": "bamtestmtier1"
+    },
+    "newStorageAccountType": {
+      "value": "Standard_LRS"
+    },
+    "vnetName": {
+      "value": "MultiTierVnet"
+    },
+    "vnetAddressSpace": {
+      "value": "10.6.0.0/16"
+    },
+    "lbName": {
+      "value": "loadbal-testmtier1"
+    },
+    "haSetName": {
+      "value": "haSet-testmtier1"
+    },
+    "fwVmCount": {
+      "value": "HACluster"
+    },
+    "imageSku": {
+      "value": "byol"
+    },
+    "location": {
+      "value": "westeurope"
+    }
+  }
+}

@@ -1,0 +1,78 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "fwVmName": {
+      "value": "bam-testmtier2"
+    },
+    "fwVmSize_Standard_LRS": {
+      "value": "Standard_D1_v2"
+    },
+    "fwVmAddress1": {
+      "value": "172.17.0.4"
+    },
+    "fwVmAddress2": {
+      "value": "172.17.0.5"
+    },
+    "fwVmRootPasswd": {
+      "value": "asdqweQWE123"
+    },
+    "fwSubnetName": {
+      "value": "FirewallSubnet"
+    },
+    "fwSubnetAddress": {
+      "value": "172.17.0.0/29"
+    },
+    "tier1SubnetName": {
+      "value": "Tier1Subnet"
+    },
+    "tier1SubnetAddress": {
+      "value": "172.17.1.0/24"
+    },
+    "tier2SubnetName": {
+      "value": "Tier2Subnet"
+    },
+    "tier2SubnetAddress": {
+      "value": "172.17.2.0/24"
+    },
+    "tier3SubnetName": {
+      "value": "Tier3Subnet"
+    },
+    "tier3SubnetAddress": {
+      "value": "172.17.3.0/24"
+    },
+    "publicIpName": {
+      "value": "bam-test-mtier2"
+    },
+    "publicIpDnsName": {
+      "value": "bam-testmtier2"
+    },
+    "publicIpAddressType": {
+      "value": "Dynamic"
+    },
+    "publicIpNewOrNone": {
+      "value": "new"
+    },
+    "newStorageAccountName": {
+      "value": "bamtestmtier2"
+    },
+    "newStorageAccountType": {
+      "value": "Standard_LRS"
+    },
+    "vnetName": {
+      "value": "MultiTierVnet"
+    },
+    "vnetAddressSpace": {
+      "value": "172.17.0.0/16"
+    },
+    "fwVmCount": {
+      "value": "SingleInstance"
+    },
+    "imageSku": {
+      "value": "hourly"
+    },
+    "location": {
+      "value": "centralus"
+    }
+  }
+}

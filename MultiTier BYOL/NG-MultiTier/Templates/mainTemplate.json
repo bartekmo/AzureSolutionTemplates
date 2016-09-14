@@ -3,8 +3,14 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "fwVmName": { "type": "string" },
-    "fwVmSize_Standard_LRS": { "type": "string" },
-    "fwVmSize_Premium_LRS": { "type": "string" },
+    "fwVmSize_Standard_LRS": {
+      "type": "string",
+      "defaultValue": "na"
+    },
+    "fwVmSize_Premium_LRS": {
+      "type": "string",
+      "defaultValue": "na"
+    },
     "fwVmAddress1": { "type": "string" },
     "fwVmAddress2": { "type": "string" },
     "fwVmRootPasswd": { "type": "string" },
@@ -17,24 +23,37 @@
     "tier3SubnetName": { "type": "string" },
     "tier3SubnetAddress": { "type": "string" },
     "publicIpName": { "type": "string" },
-    "publicIpDnsName": { "type": "string" },
+    "publicIpResourceGroup": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().name]"
+    },
+    "publicIpDnsName": {
+      "type": "string",
+      "defaultValue": "none"
+    },
     "publicIpAddressType": { "type": "string" },
     "publicIpNewOrNone": { "type": "string" },
     "newStorageAccountName": { "type": "string" },
     "newStorageAccountType": { "type": "string" },
     "vnetName": { "type": "string" },
     "vnetAddressSpace": { "type": "string" },
-    "lbName": { "type": "string" },
-    "haSetName": { "type": "string" },
+    "lbName": {
+      "type": "string",
+      "defaultValue": "none"
+    },
+    "haSetName": {
+      "type": "string",
+      "defaultValue": "none"
+    },
     "fwVmCount": { "type": "string" },
     "location": { "type": "string" },
+    "imageSku": { "type": "string" },
     "baseUrl": {
       "type": "string",
-      "defaultValue": "https: //raw.githubusercontent.com/bartekmo/AzureSolutionTemplates/master/MultiTier%20BYOL/NG-MultiTier/Templates"
+      "defaultValue": "https://raw.githubusercontent.com/bartekmo/AzureSolutionTemplates/master/MultiTier%20BYOL/NG-MultiTier/Templates"
     }
   },
   "variables": {
-    "imageSku": "byol",
     "location": "[parameters( 'location' )]",
     "fwVmSize": "[parameters( concat( 'fwVmSize_', parameters( 'newStorageAccountType' )))]",
     "nicName": "[concat( 'ngfNIC-', replace(resourceGroup().name, '-', ''))]",
@@ -43,7 +62,7 @@
     "vnetId": "[resourceId('Microsoft.Network/virtualNetworks',parameters( 'vnetName' ))]",
     "storageId": "[resourceId( 'Microsoft.Storage/storageAccounts', parameters( 'newStorageAccountName' ))]",
     "subnet1Ref": "[concat(variables('vnetID'),'/subnets/',parameters( 'fwSubnetName' ))]",
-    "publicIpRef": "[resourceId( 'Microsoft.Network/publicIPAddresses', parameters( 'publicIPName' ))]",
+    "publicIpRef": "[resourceId( parameters( 'publicIpResourceGroup' ), 'Microsoft.Network/publicIPAddresses', parameters( 'publicIPName' ))]",
     "publicIpDependency": "[resourceId( 'Microsoft.Resources/deployments', 'publicIp' )]",
     "routeTableName": "[concat('default-via-', replace(parameters('fwVmName'), '-', ''))]",
     "apiVersion": "2015-06-15",
@@ -88,7 +107,7 @@
           "location": {
             "value": "[parameters( 'location' )]"
           }
-          }
+        }
       }
     },
     {
@@ -208,13 +227,19 @@
             "value": "[variables( 'publicIpRef' )]"
           },
           "imageSku": {
-            "value": "[variables( 'imageSku' )]"
+            "value": "[parameters( 'imageSku' )]"
           },
           "newStorageAccountName": {
             "value": "[parameters( 'newStorageAccountName' )]"
           },
           "location": {
             "value": "[parameters( 'location' )]"
+          },
+          "publicIpNewOrNone": {
+            "value": "[parameters( 'publicIpNewOrNone' )]"
+          },
+          "baseUrl": {
+            "value": "[parameters( 'baseUrl' )]"
           }
         }
       }
