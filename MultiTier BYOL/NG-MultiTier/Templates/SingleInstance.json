@@ -32,9 +32,6 @@
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[variables('nicName')]",
       "location": "[parameters('location')]",
-      "dependsOn": [
-        "[resourceId('Microsoft.Network/loadBalancers/', parameters('lbName'))]"
-      ],
       "properties": {
         "ipConfigurations": [
           {
