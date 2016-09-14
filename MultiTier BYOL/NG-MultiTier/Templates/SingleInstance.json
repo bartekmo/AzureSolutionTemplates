@@ -75,7 +75,7 @@
       "name": "[parameters('fwVmName')]",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments/', variables('nicName'))]"
+        "Microsoft.Resources/deployments/SingleFirewallNic"
       ],
       "plan": {
         "name": "[parameters('imageSku')]",
